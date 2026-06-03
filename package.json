@@ -4,6 +4,7 @@
   "description": "Amar Gauranga - Spiritual Guidance App",
   "dependencies": {
     "@pinecone-database/pinecone": "^3.0.0",
-    "@google/generative-ai": "^0.21.0"
+    "@google/generative-ai": "^0.21.0",
+    "firebase-admin": "^12.0.0"
   }
 }
