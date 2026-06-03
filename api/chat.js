@@ -21,61 +21,71 @@ module.exports = async (req, res) => {
       ? "Draw wisdom from all Acharyas and scriptures."
       : `Focus on teachings from: ${acharya}.`;
 
-    // Pinecone search
+    // Pinecone search using integrated inference (searchRecords for integrated models)
     let context = "";
     let references = [];
     try {
       const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
       const index = pc.index("amar-gauranga", process.env.PINECONE_INDEX_HOST);
-      const filter = {};
-      if (acharya && acharya !== "all") {
-        filter.acharya = { $eq: acharya === "scriptures" ? "Srila Prabhupada" : acharya };
-      }
-      const searchParams = {
-        query: { inputs: { text: question }, topK: 6 },
+
+      // Use searchRecords for integrated embedding models
+      const searchResult = await index.searchRecords({
+        query: {
+          inputs: { text: question },
+          topK: 6,
+        },
         fields: ["source","acharya","book","chapter","english","purport"],
         namespace: "teachings",
-      };
-      if (Object.keys(filter).length > 0) searchParams.query.filter = filter;
-      const result = await index.searchRecords(searchParams);
-      (result.result?.hits || []).forEach((hit, i) => {
+      });
+
+      const hits = searchResult.result?.hits || [];
+      hits.forEach((hit, i) => {
         const f = hit.fields || {};
         const text = f.purport || f.english || "";
-        if (text.length > 30) {
-          context += `\n[${i+1}] Source: ${f.source||f.book||"Scripture"} | Acharya: ${f.acharya||"Srila Prabhupada"} | Ref: ${f.chapter||""}\nText: ${text.substring(0,600)}\n`;
+        if (text && text.length > 30) {
+          context += `\n[${i+1}] ${f.source||"Scripture"} | ${f.acharya||"Srila Prabhupada"} | ${f.chapter||""}\n${text.substring(0,500)}\n`;
           references.push({ source: f.source||f.book, chapter: f.chapter, acharya: f.acharya });
         }
       });
     } catch(e) {
-      console.error("Pinecone:", e.message);
+      console.error("Pinecone error:", e.message);
     }
 
-    // Gemini
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
-
-    const prompt = `You are Amar Gauranga — Lord Chaitanya's compassionate voice through Vaishnava teachings.
+    // Build prompt
+    const prompt = `You are Amar Gauranga — Lord Chaitanya's compassionate voice through authentic Vaishnava teachings.
 
 Rules:
-- Address as "dear soul" or "beloved devotee"  
-- Acknowledge their pain first with empathy
+- Address as "dear soul" or "beloved devotee"
+- Acknowledge their pain first with deep empathy
 - Give scriptural wisdom with exact references
-- End with encouragement
+- End with encouragement and chanting the holy name
 - ${acharyaInstruction}
 - Respond in ${responseLang}
-- 200-300 words max
+- Keep response warm and personal, 200-300 words
 
-${context ? `TEACHINGS TO USE:\n${context}` : "Use Bhagavad Gita and Vaishnava philosophy."}
+${context ? `AUTHENTIC TEACHINGS TO USE:\n${context}` : "Use your knowledge of Bhagavad Gita, Srimad Bhagavatam and Vaishnava philosophy."}
 
-Question: ${question}`;
+Devotee's question: ${question}
 
+Respond as Lord Gauranga speaking with infinite compassion:`;
+
+    // Call Gemini 2.5 Flash — confirmed working model
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
     const result = await model.generateContent(prompt);
     const answer = result.response.text();
 
-    return res.status(200).json({ answer, references: references.slice(0,3) });
+    return res.status(200).json({
+      answer,
+      references: references.slice(0, 3),
+      matches_found: references.length,
+    });
 
   } catch (error) {
     console.error("Error:", error.message);
-    return res.status(500).json({ error: "Something went wrong.", details: error.message });
+    return res.status(500).json({
+      error: "Something went wrong. Please try again.",
+      details: error.message,
+    });
   }
 };
