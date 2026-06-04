@@ -968,142 +968,51 @@ footer {
 </section>
 
 
-<!-- FESTIVAL CALENDAR -->
+
+<!-- VAISHNAVA CALENDAR -->
 <section class="festival" id="calendar">
   <div class="festival-inner">
     <div class="festival-header reveal">
-      <p class="section-tag">Vaishnava Calendar</p>
-      <h2 class="section-title">Sacred Festival Days</h2>
-      <p class="section-desc" style="margin:0 auto;">Upcoming festivals with teachings and spiritual significance from ISKCON Vrindavan calendar.</p>
+      <p class="section-tag">Vaishnava Calendar 2026</p>
+      <h2 class="section-title">Sacred Festival Days & Ekadashis</h2>
+      <p class="section-desc" style="margin:0 auto;">Complete ISKCON Gaudiya Vaishnava calendar — Gaurabda 540. Ekadashis, festivals, and appearance/disappearance days of Acharyas.</p>
     </div>
 
-    <!-- Year selector -->
-    <div style="display:flex; gap:10px; justify-content:center; margin-bottom:36px; flex-wrap:wrap;" class="reveal">
-      <button onclick="showYear(2024)" id="yr-2024" class="yr-btn" style="padding:8px 20px; border-radius:20px; border:1.5px solid var(--border); background:white; color:var(--text2); font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s;">2024</button>
-      <button onclick="showYear(2025)" id="yr-2025" class="yr-btn" style="padding:8px 20px; border-radius:20px; border:1.5px solid var(--border); background:white; color:var(--text2); font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s;">2025</button>
-      <button onclick="showYear(2026)" id="yr-2026" class="yr-btn active-yr" style="padding:8px 20px; border-radius:20px; border:1.5px solid var(--royal); background:var(--royal-light); color:var(--royal-dark); font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s;">2026 ← Now</button>
-      <button onclick="showYear(2027)" id="yr-2027" class="yr-btn" style="padding:8px 20px; border-radius:20px; border:1.5px solid var(--border); background:white; color:var(--text2); font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s;">2027</button>
-      <button onclick="showYear(2028)" id="yr-2028" class="yr-btn" style="padding:8px 20px; border-radius:20px; border:1.5px solid var(--border); background:white; color:var(--text2); font-size:13px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s;">2028</button>
+    <!-- Legend -->
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;" class="reveal">
+      <span style="font-size:12px;display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#1a3c8f;display:inline-block;"></span> Ekadashi Fast</span>
+      <span style="font-size:12px;display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#d4a017;display:inline-block;"></span> Festival</span>
+      <span style="font-size:12px;display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#16a34a;display:inline-block;"></span> Appearance Day</span>
+      <span style="font-size:12px;display:flex;align-items:center;gap:4px;"><span style="width:10px;height:10px;border-radius:50%;background:#9333ea;display:inline-block;"></span> Disappearance Day</span>
     </div>
 
-    <!-- Festival grid - shows 4 upcoming by default -->
-    <div id="festival-grid" class="festival-grid">
+    <!-- Month selector -->
+    <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:36px;" class="reveal">
+      <button class="cal-month-btn" data-month="1" onclick="renderCalendar(1)" style="padding:7px 14px;border-radius:16px;border:1px solid rgba(43,74,203,0.12);background:white;color:#6b7280;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:all 0.2s;">Jan</button>
+      <button class="cal-month-btn" data-month="2" onclick="renderCalendar(2)" style="padding:7px 14px;border-radius:16px;border:1px solid rgba(43,74,203,0.12);background:white;color:#6b7280;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:all 0.2s;">Feb</button>
+      <button class="cal-month-btn" data-month="3" onclick="renderCalendar(3)" style="padding:7px 14px;border-radius:16px;border:1px solid rgba(43,74,203,0.12);background:white;color:#6b7280;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:all 0.2s;">Mar</button>
+      <button class="cal-month-btn" data-month="4" onclick="renderCalendar(4)" style="padding:7px 14px;border-radius:16px;border:1px solid rgba(43,74,203,0.12);background:white;color:#6b7280;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:all 0.2s;">Apr</button>
+      <button class="cal-month-btn" data-month="5" onclick="renderCalendar(5)" style="padding:7px 14px;border-radius:16px;border:1px solid rgba(43,74,203,0.12);background:white;color:#6b7280;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:all 0.2s;">May</button>
+      <button class="cal-month-btn" data-month="6" onclick="renderCalendar(6)" style="padding:7px 14px;border-radius:16px;border:1px solid rgba(43,74,203,0.12);background:white;color:#6b7280;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:all 0.2s;">Jun</button>
+      <button class="cal-month-btn" data-month="7" onclick="renderCalendar(7)" style="padding:7px 14px;border-radius:16px;border:1px solid rgba(43,74,203,0.12);background:white;color:#6b7280;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:all 0.2s;">Jul</button>
+      <button class="cal-month-btn" data-month="8" onclick="renderCalendar(8)" style="padding:7px 14px;border-radius:16px;border:1px solid rgba(43,74,203,0.12);background:white;color:#6b7280;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:all 0.2s;">Aug</button>
+      <button class="cal-month-btn" data-month="9" onclick="renderCalendar(9)" style="padding:7px 14px;border-radius:16px;border:1px solid rgba(43,74,203,0.12);background:white;color:#6b7280;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:all 0.2s;">Sep</button>
+      <button class="cal-month-btn" data-month="10" onclick="renderCalendar(10)" style="padding:7px 14px;border-radius:16px;border:1px solid rgba(43,74,203,0.12);background:white;color:#6b7280;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:all 0.2s;">Oct</button>
+      <button class="cal-month-btn" data-month="11" onclick="renderCalendar(11)" style="padding:7px 14px;border-radius:16px;border:1px solid rgba(43,74,203,0.12);background:white;color:#6b7280;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:all 0.2s;">Nov</button>
+      <button class="cal-month-btn" data-month="12" onclick="renderCalendar(12)" style="padding:7px 14px;border-radius:16px;border:1px solid rgba(43,74,203,0.12);background:white;color:#6b7280;font-size:12px;cursor:pointer;font-family:DM Sans,sans-serif;transition:all 0.2s;">Dec</button>
     </div>
 
-    <!-- View full calendar button -->
-    <div style="text-align:center; margin-top:40px;" class="reveal">
-      <button id="toggle-cal-btn" onclick="toggleFullCalendar()" style="padding:13px 36px; border-radius:24px; border:1.5px solid var(--royal); background:white; color:var(--royal-dark); font-size:14px; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s;" onmouseover="this.style.background='var(--royal-light)'" onmouseout="this.style.background='white'">
-        📅 View Full Calendar →
-      </button>
-      <a href="https://iskconvrindavan.com/vaishnava-calendar" target="_blank" style="display:block; margin-top:12px; font-size:12px; color:var(--text2); text-decoration:none;">
-        Source: ISKCON Vrindavan Vaishnava Calendar ↗
-      </a>
+    <!-- Calendar grid -->
+    <div id="cal-grid" style="display:grid;grid-template-columns:1fr;gap:14px;max-width:800px;margin:0 auto;">
+    </div>
+
+    <!-- Source credit -->
+    <div style="text-align:center;margin-top:32px;" class="reveal">
+      <p style="font-size:11px;color:#9ca3af;">Source: ISKCON Gaudiya Vaishnava Calendar (Gaurabda 540) | Data from dekhopanchang.com & guptvrindavandham.org</p>
     </div>
   </div>
 </section>
 
-<script>
-// Festival data — 2024 to 2028
-const allFestivals = {
-  2024: [
-    { emoji:"🌸", name:"Gaura Purnima", date:"March 25, 2024", desc:"Appearance of Lord Gauranga — most merciful avatar of this age.", past:true },
-    { emoji:"🪈", name:"Rama Navami", date:"April 17, 2024", desc:"Glorious appearance of Lord Ramachandra.", past:true },
-    { emoji:"🌊", name:"Ratha Yatra", date:"July 7, 2024", desc:"Lord Jagannath's grand chariot festival.", past:true },
-    { emoji:"🌕", name:"Guru Purnima", date:"July 21, 2024", desc:"Day to honor the Guru with gratitude and devotion.", past:true },
-    { emoji:"🪈", name:"Janmashtami", date:"August 26, 2024", desc:"Divine appearance of Lord Sri Krishna.", past:true },
-    { emoji:"🌺", name:"Radhastami", date:"September 11, 2024", desc:"Appearance of Srimati Radharani — the topmost devotee.", past:true },
-    { emoji:"🏮", name:"Diwali / Govardhana Puja", date:"November 2, 2024", desc:"Celebration of Lord Krishna lifting Govardhana Hill.", past:true },
-    { emoji:"🌙", name:"Utthana Ekadashi", date:"November 12, 2024", desc:"Lord Vishnu awakens from His yoga sleep.", past:true },
-  ],
-  2025: [
-    { emoji:"🌸", name:"Gaura Purnima", date:"March 14, 2025", desc:"Appearance of Lord Chaitanya Mahaprabhu.", past:true },
-    { emoji:"🪈", name:"Rama Navami", date:"April 6, 2025", desc:"Glorious appearance of Lord Ramachandra.", past:true },
-    { emoji:"🌊", name:"Ratha Yatra", date:"June 27, 2025", desc:"Lord Jagannath's chariot festival — open to all.", past:true },
-    { emoji:"🌕", name:"Guru Purnima", date:"July 10, 2025", desc:"Honor the divine Guru in our lives.", past:true },
-    { emoji:"🪈", name:"Janmashtami", date:"August 16, 2025", desc:"Divine appearance of Lord Sri Krishna.", past:true },
-    { emoji:"🌺", name:"Radhastami", date:"September 1, 2025", desc:"Appearance of Srimati Radharani.", past:true },
-    { emoji:"🏮", name:"Govardhan Puja", date:"October 21, 2025", desc:"Krishna lifted Govardhan to protect the devotees.", past:true },
-    { emoji:"🌙", name:"Kartik Month Begins", date:"October 29, 2025", desc:"The most auspicious month for devotional service.", past:true },
-  ],
-  2026: [
-    { emoji:"🌸", name:"Gaura Purnima", date:"March 3, 2026", desc:"Appearance of Lord Chaitanya Mahaprabhu.", past:true },
-    { emoji:"🪈", name:"Rama Navami", date:"March 26, 2026", desc:"Appearance of Lord Ramachandra.", past:true },
-    { emoji:"🌼", name:"Akshaya Tritiya", date:"April 21, 2026", desc:"Most auspicious day for new beginnings.", past:true },
-    { emoji:"🌊", name:"Ratha Yatra Kolkata", date:"June 26, 2026", desc:"54th ISKCON Kolkata Ratha Yatra.", past:true },
-    { emoji:"🌕", name:"Guru Purnima", date:"July 10, 2026", desc:"Honor the divine Guru.", past:false, upcoming:true },
-    { emoji:"🪈", name:"Janmashtami", date:"August 16, 2026", desc:"Divine appearance of Lord Sri Krishna.", past:false },
-    { emoji:"🌺", name:"Radhastami", date:"September 1, 2026", desc:"Appearance of Srimati Radharani.", past:false },
-    { emoji:"🏮", name:"Govardhan Puja", date:"October 20, 2026", desc:"Krishna lifted Govardhan to protect His devotees.", past:false },
-  ],
-  2027: [
-    { emoji:"🌸", name:"Gaura Purnima", date:"March 23, 2027", desc:"Appearance of Lord Chaitanya Mahaprabhu.", past:false },
-    { emoji:"🪈", name:"Rama Navami", date:"April 15, 2027", desc:"Appearance of Lord Ramachandra.", past:false },
-    { emoji:"🌊", name:"Ratha Yatra", date:"July 6, 2027", desc:"Lord Jagannath's chariot festival.", past:false },
-    { emoji:"🌕", name:"Guru Purnima", date:"July 30, 2027", desc:"Honor the divine Guru in our lives.", past:false },
-    { emoji:"🪈", name:"Janmashtami", date:"August 5, 2027", desc:"Divine appearance of Lord Sri Krishna.", past:false },
-    { emoji:"🌺", name:"Radhastami", date:"August 21, 2027", desc:"Appearance of Srimati Radharani.", past:false },
-    { emoji:"🏮", name:"Govardhan Puja", date:"November 9, 2027", desc:"Krishna lifted Govardhan Hill.", past:false },
-    { emoji:"🌙", name:"Kartik Month", date:"October 2027", desc:"The most auspicious month for devotional service.", past:false },
-  ],
-  2028: [
-    { emoji:"🌸", name:"Gaura Purnima", date:"March 11, 2028", desc:"Appearance of Lord Chaitanya Mahaprabhu.", past:false },
-    { emoji:"🪈", name:"Rama Navami", date:"April 3, 2028", desc:"Appearance of Lord Ramachandra.", past:false },
-    { emoji:"🌊", name:"Ratha Yatra", date:"June 25, 2028", desc:"Lord Jagannath's chariot festival.", past:false },
-    { emoji:"🌕", name:"Guru Purnima", date:"July 18, 2028", desc:"Honor the divine Guru.", past:false },
-    { emoji:"🪈", name:"Janmashtami", date:"August 24, 2028", desc:"Divine appearance of Lord Sri Krishna.", past:false },
-    { emoji:"🌺", name:"Radhastami", date:"September 9, 2028", desc:"Appearance of Srimati Radharani.", past:false },
-    { emoji:"🏮", name:"Govardhan Puja", date:"October 28, 2028", desc:"Krishna lifted Govardhan Hill.", past:false },
-    { emoji:"🌙", name:"Kartik Month", date:"October 2028", desc:"Most auspicious month for bhakti.", past:false },
-  ],
-};
-
-let currentYear = 2026;
-let showingFull = false;
-
-function showYear(year) {
-  currentYear = year;
-  showingFull = false;
-  document.getElementById('toggle-cal-btn').textContent = '📅 View Full Calendar →';
-  document.querySelectorAll('.yr-btn').forEach(b => {
-    b.style.background = 'white';
-    b.style.borderColor = 'rgba(43,74,203,0.15)';
-    b.style.color = '#6b7280';
-  });
-  const btn = document.getElementById('yr-' + year);
-  if(btn) {
-    btn.style.background = 'var(--royal-light)';
-    btn.style.borderColor = 'var(--royal)';
-    btn.style.color = 'var(--royal-dark)';
-  }
-  renderFestivals(year, false);
-}
-
-function toggleFullCalendar() {
-  showingFull = !showingFull;
-  document.getElementById('toggle-cal-btn').textContent = showingFull ? '📅 Show Upcoming Only ←' : '📅 View Full Calendar →';
-  renderFestivals(currentYear, showingFull);
-}
-
-function renderFestivals(year, showAll) {
-  const festivals = allFestivals[year] || [];
-  const upcoming = festivals.filter(f => !f.past);
-  const toShow = showAll ? festivals : (year === 2026 ? upcoming.slice(0,4) : festivals.slice(0,4));
-  const grid = document.getElementById('festival-grid');
-  grid.innerHTML = toShow.map(f => `
-    <div class="festival-card ${f.upcoming ? 'upcoming' : ''}" style="${f.past ? 'opacity:0.55;' : ''}">
-      ${f.upcoming ? '<div class="festival-upcoming-tag">Next Up</div>' : ''}
-      ${f.past ? '<div style="position:absolute;top:14px;right:14px;font-size:9px;background:#e5e7eb;color:#6b7280;padding:3px 8px;border-radius:8px;letter-spacing:1px;text-transform:uppercase;">Past</div>' : ''}
-      <div class="festival-emoji">${f.emoji}</div>
-      <div class="festival-name">${f.name}</div>
-      <div class="festival-date">${f.date}</div>
-      <div class="festival-desc">${f.desc}</div>
-    </div>
-  `).join('');
-}
-
-// Init — show upcoming 4 for 2026
-renderFestivals(2026, false);
-</script>
 
 
 <!-- TESTIMONIALS -->
@@ -1877,6 +1786,187 @@ function showJournalModal(answers) {
 }
 
 checkSession();
+
+</script>
+
+<script>
+// VAISHNAVA CALENDAR 2026 — Complete Data
+var calendarData = {
+  1: [ // January
+    {d:6, name:"Putrada Ekadashi", type:"ekadashi", desc:"Grants the boon of worthy progeny. Shukla Paksha Ekadashi of Pausha."},
+    {d:14, name:"Shat Tila Ekadashi", type:"ekadashi", desc:"Six uses of sesame (til). Devotees donate, bathe with, eat and offer sesame to Vishnu."},
+    {d:29, name:"Jaya (Bhaimi) Ekadashi", type:"ekadashi", desc:"Frees devotees from cycle of ghostly existence. Magha Shukla Paksha."},
+  ],
+  2: [ // February
+    {d:1, name:"Nityananda Trayodashi", type:"appearance", desc:"Appearance of Lord Nityananda — merciful incarnation of Balarama, Chaitanya Mahaprabhu's closest associate."},
+    {d:13, name:"Vijaya Ekadashi", type:"ekadashi", desc:"Lord Rama observed this before crossing to Lanka. Grants victory over obstacles."},
+    {d:17, name:"Srila Bhaktisiddhanta Saraswati — Appearance", type:"appearance", desc:"Appearance of Srila Bhaktisiddhanta Saraswati Thakura (1874), Prabhupada's spiritual master."},
+    {d:27, name:"Amalaki Ekadashi", type:"ekadashi", desc:"Dedicated to sacred Amla tree, incarnation of Lord Vishnu. Highly meritorious."},
+    {d:28, name:"Sri Madhavendra Puri — Disappearance", type:"disappearance", desc:"Disappearance of Sri Madhavendra Puri, from whom the Gaudiya Vaishnava tree of devotion grows."},
+  ],
+  3: [ // March
+    {d:3, name:"Gaura Purnima", type:"festival", desc:"Appearance of Sri Chaitanya Mahaprabhu (1486 CE) — the golden avatar. Most important Gaudiya Vaishnava festival."},
+    {d:15, name:"Papamochani Ekadashi", type:"ekadashi", desc:"Destroyer of sins. Highly auspicious for spiritual cleansing before Hindu New Year."},
+    {d:26, name:"Sri Rama Navami", type:"festival", desc:"Appearance of Lord Ramachandra, the maryada purushottama. Grand celebration with readings from Ramayana."},
+    {d:29, name:"Kamada Ekadashi", type:"ekadashi", desc:"Wish-fulfiller. Fasting brings spiritual and material blessings."},
+  ],
+  4: [ // April
+    {d:13, name:"Varuthini Ekadashi", type:"ekadashi", desc:"Protector from sin. Helps overcome karmic burdens and grants spiritual protection."},
+    {d:21, name:"Akshaya Tritiya", type:"festival", desc:"Most auspicious day for new beginnings. Any charity or spiritual activity multiplies infinitely."},
+    {d:25, name:"Sri Sita Navami", type:"festival", desc:"Appearance of Goddess Sita, the eternal consort of Lord Rama."},
+    {d:27, name:"Mohini Ekadashi", type:"ekadashi", desc:"Associated with Lord Vishnu's enchanting Mohini form. Purification from illusion and attachment."},
+  ],
+  5: [ // May
+    {d:7, name:"Narasimha Chaturdashi", type:"festival", desc:"Appearance of Lord Narasimhadeva who protected His devotee Prahlada. Powerful prayers for protection."},
+    {d:13, name:"Apara Ekadashi", type:"ekadashi", desc:"Removes sins, misfortune and obstacles. Grants immense spiritual merit."},
+    {d:27, name:"Padmini Ekadashi", type:"ekadashi", desc:"Rare Adhik Maas Ekadashi. Grants merit of multiple regular Ekadashis combined."},
+  ],
+  6: [ // June
+    {d:6, name:"Pandava Nirjala Ekadashi", type:"ekadashi", desc:"Strictest Ekadashi — complete fast without food or water for 24 hours. Merit of all 24 Ekadashis."},
+    {d:11, name:"Parama Ekadashi", type:"ekadashi", desc:"Rare Ekadashi observed during Adhik Maas. Especially purifying."},
+    {d:25, name:"Jagannath Rath Yatra", type:"festival", desc:"Grand chariot festival of Lord Jagannath, Baladeva and Subhadra. ISKCON celebrates worldwide."},
+  ],
+  7: [ // July
+    {d:10, name:"Guru Purnima", type:"festival", desc:"Day to honor the spiritual master and Srila Vyasadeva. Gratitude to the guru parampara."},
+    {d:11, name:"Yogini Ekadashi", type:"ekadashi", desc:"Krishna Paksha Ekadashi. Destroys the most grievous sins."},
+    {d:25, name:"Shayani Ekadashi", type:"ekadashi", desc:"Lord Vishnu goes to sleep (Yoga Nidra). Beginning of Chaturmasya. Shukla Paksha."},
+  ],
+  8: [ // August
+    {d:8, name:"Sri Balarama Jayanti", type:"appearance", desc:"Appearance of Lord Balarama, first expansion of Krishna and source of all spiritual strength."},
+    {d:9, name:"Kamika Ekadashi", type:"ekadashi", desc:"Krishna Paksha Ekadashi. Even hearing the glories of this Ekadashi destroys all sins."},
+    {d:14, name:"Sri Krishna Janmashtami", type:"festival", desc:"Appearance of Lord Sri Krishna, the Supreme Personality of Godhead. Fasting until midnight."},
+    {d:15, name:"Nandotsav", type:"festival", desc:"Celebration of Nanda Maharaja's joy at Krishna's birth. Grand feasting after Janmashtami."},
+    {d:24, name:"Pavitropana Ekadashi", type:"ekadashi", desc:"Shukla Paksha Ekadashi. Purifies all sins and grants liberation."},
+    {d:28, name:"Radhastami", type:"appearance", desc:"Appearance of Srimati Radharani — supreme devotee and pleasure potency of Lord Krishna."},
+  ],
+  9: [ // September
+    {d:1, name:"Srila Prabhupada Appearance (Vyasa Puja)", type:"appearance", desc:"Appearance of A.C. Bhaktivedanta Swami Prabhupada (1896), founder-acharya of ISKCON."},
+    {d:7, name:"Annada Ekadashi", type:"ekadashi", desc:"Krishna Paksha Ekadashi. Frees from all debts and sins. Grants food and sustenance."},
+    {d:13, name:"Srila Bhaktivinoda Thakura — Appearance", type:"appearance", desc:"Appearance of Srila Bhaktivinoda Thakura (1838), pioneer who revived Gaudiya Vaishnavism."},
+    {d:22, name:"Parshva Ekadashi", type:"ekadashi", desc:"Shukla Paksha Ekadashi. Lord Vishnu turns on His side during Yoga Nidra."},
+  ],
+  10: [ // October
+    {d:6, name:"Indira Ekadashi", type:"ekadashi", desc:"Krishna Paksha Ekadashi. Liberates ancestors from suffering."},
+    {d:21, name:"Govardhan Puja", type:"festival", desc:"Krishna lifted Govardhan Hill to protect Vrindavan. A mountain of prasadam (Annakut) is offered."},
+    {d:22, name:"Pashankusha Ekadashi", type:"ekadashi", desc:"Shukla Paksha Ekadashi. Controls the elephant of the mind. Grants liberation."},
+  ],
+  11: [ // November
+    {d:5, name:"Rama Ekadashi", type:"ekadashi", desc:"Krishna Paksha Ekadashi. Associated with Lord Rama. Grants happiness and peace."},
+    {d:14, name:"Srila Prabhupada — Disappearance", type:"disappearance", desc:"Disappearance of Srila Prabhupada (1977). Devotees fast until noon with memorial programs."},
+    {d:21, name:"Utthana Ekadashi", type:"ekadashi", desc:"Lord Vishnu awakens from His yoga sleep. End of Chaturmasya. Shukla Paksha."},
+  ],
+  12: [ // December
+    {d:4, name:"Utpanna Ekadashi", type:"ekadashi", desc:"Krishna Paksha. Origin of all Ekadashis. Goddess Ekadashi appeared on this day."},
+    {d:20, name:"Mokshada Ekadashi", type:"ekadashi", desc:"Also known as Vaikuntha Ekadashi. Grants liberation. Bhagavad Gita was spoken on this day."},
+  ]
+};
+
+var monthNames = ["","January","February","March","April","May","June","July","August","September","October","November","December"];
+var currentCalMonth = new Date().getMonth() + 1;
+
+function getTypeColor(type) {
+  if (type === "ekadashi") return "#1a3c8f";
+  if (type === "festival") return "#d4a017";
+  if (type === "appearance") return "#16a34a";
+  if (type === "disappearance") return "#9333ea";
+  return "#6b7280";
+}
+
+function getTypeEmoji(type) {
+  if (type === "ekadashi") return "🌙";
+  if (type === "festival") return "🎉";
+  if (type === "appearance") return "🌸";
+  if (type === "disappearance") return "🕯️";
+  return "📅";
+}
+
+function getTypeLabel(type) {
+  if (type === "ekadashi") return "Ekadashi Fast";
+  if (type === "festival") return "Festival";
+  if (type === "appearance") return "Appearance Day";
+  if (type === "disappearance") return "Disappearance Day";
+  return "Event";
+}
+
+function renderCalendar(month) {
+  currentCalMonth = month;
+  var grid = document.getElementById('cal-grid');
+  if (!grid) return;
+
+  var events = calendarData[month] || [];
+  var today = new Date();
+  var todayDay = today.getDate();
+  var todayMonth = today.getMonth() + 1;
+
+  // Update month selector
+  var btns = document.querySelectorAll('.cal-month-btn');
+  for (var i = 0; i < btns.length; i++) {
+    var m = parseInt(btns[i].getAttribute('data-month'));
+    if (m === month) {
+      btns[i].style.background = '#1a3c8f';
+      btns[i].style.color = 'white';
+    } else {
+      btns[i].style.background = 'white';
+      btns[i].style.color = '#6b7280';
+    }
+  }
+
+  if (events.length === 0) {
+    grid.innerHTML = '<div style="text-align:center;padding:40px;color:#6b7280;">No events recorded for ' + monthNames[month] + ' 2026</div>';
+    return;
+  }
+
+  var html = '';
+  for (var i = 0; i < events.length; i++) {
+    var e = events[i];
+    var isPast = (month < todayMonth) || (month === todayMonth && e.d < todayDay);
+    var isToday = (month === todayMonth && e.d === todayDay);
+    var isNext = !isPast && !isToday;
+    var opacity = isPast ? '0.5' : '1';
+    var border = isToday ? '2px solid #d4a017' : '1px solid rgba(43,74,203,0.1)';
+    var bg = isToday ? '#fffbeb' : 'white';
+
+    html += '<div style="background:' + bg + ';border:' + border + ';border-radius:16px;padding:20px;opacity:' + opacity + ';transition:all 0.2s;" onmouseover="this.style.transform=\'translateY(-2px)\';this.style.boxShadow=\'0 8px 24px rgba(43,74,203,0.08)\'" onmouseout="this.style.transform=\'none\';this.style.boxShadow=\'none\'">';
+
+    // Date badge + type badge
+    html += '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">';
+    html += '<div style="display:flex;align-items:center;gap:10px;">';
+    html += '<div style="width:44px;height:44px;border-radius:12px;background:' + getTypeColor(e.type) + ';color:white;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:16px;">' + e.d + '</div>';
+    html += '<div>';
+    html += '<div style="font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">' + monthNames[month].substring(0,3) + ' 2026</div>';
+    html += '</div>';
+    html += '</div>';
+    html += '<span style="font-size:10px;padding:3px 10px;border-radius:20px;background:' + getTypeColor(e.type) + '15;color:' + getTypeColor(e.type) + ';font-weight:500;letter-spacing:0.3px;">' + getTypeEmoji(e.type) + ' ' + getTypeLabel(e.type) + '</span>';
+    if (isToday) {
+      html += '<span style="font-size:10px;padding:3px 8px;border-radius:20px;background:#d4a017;color:white;font-weight:600;margin-left:6px;">TODAY</span>';
+    }
+    html += '</div>';
+
+    // Name
+    html += '<h4 style="font-family:Cormorant Garamond,serif;font-size:20px;font-weight:600;color:#1a1a2e;margin-bottom:6px;">' + e.name + '</h4>';
+
+    // Description
+    html += '<p style="font-size:13px;color:#6b7280;line-height:1.5;">' + e.desc + '</p>';
+
+    if (isPast) {
+      html += '<div style="font-size:10px;color:#9ca3af;margin-top:8px;">✓ Past</div>';
+    }
+
+    html += '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+function initCalendar() {
+  renderCalendar(currentCalMonth);
+}
+
+// Auto init when DOM ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initCalendar);
+} else {
+  initCalendar();
+}
 
 </script>
 </body>
