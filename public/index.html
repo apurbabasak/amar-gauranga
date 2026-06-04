@@ -1649,14 +1649,13 @@ sparkleStyle.textContent = `
 document.head.appendChild(sparkleStyle);
 </script>
 
+
 <script>
-// ── AUTH SYSTEM ─────────────────────────────────────────
+// AUTH SYSTEM
+var currentUser = null;
 
-let currentUser = null;
-
-// Check if user is already logged in
 function checkSession() {
-  const saved = localStorage.getItem('ag_user');
+  var saved = localStorage.getItem('ag_user');
   if (saved) {
     try {
       currentUser = JSON.parse(saved);
@@ -1669,252 +1668,216 @@ function checkSession() {
 
 function showLoggedInState() {
   if (!currentUser) return;
-  // Update nav buttons
-  const navActions = document.querySelector('.nav-actions');
+  var navActions = document.querySelector('.nav-actions');
   if (navActions) {
-    navActions.innerHTML = `
-      <span style="font-size:13px;color:var(--text);margin-right:8px;">
-        Hare Krishna, <strong>${currentUser.name}</strong>
-      </span>
-      <button class="btn-login" onclick="openJournal()">My Journal</button>
-      <button class="btn-start" onclick="doLogout()">Logout</button>
-    `;
+    navActions.innerHTML = '<span style="font-size:13px;color:#1a1a2e;margin-right:8px;">Hare Krishna, <strong>' + currentUser.name + '</strong></span>' +
+      '<button class="btn-login" onclick="openJournal()">My Journal</button>' +
+      '<button class="btn-start" onclick="doLogout()">Logout</button>';
   }
 }
 
-function showError(containerId, message) {
-  let el = document.getElementById(containerId);
-  if (!el) {
-    el = document.createElement('div');
-    el.id = containerId;
-    el.style.cssText = 'color:#dc2626;font-size:13px;text-align:center;padding:8px;margin-top:8px;background:#fef2f2;border-radius:8px;';
-  }
-  el.textContent = message;
-  return el;
-}
+function doSignup() {
+  var form = document.getElementById('modal-signup');
+  var inputs = form.querySelectorAll('.modal-input');
+  var name = inputs[0].value.trim();
+  var pin = inputs[1].value.trim();
+  var initiatedName = inputs[2] ? inputs[2].value.trim() : '';
+  var guruName = inputs[3] ? inputs[3].value.trim() : '';
+  var loc = inputs[4] ? inputs[4].value.trim() : '';
+  var lang = inputs[5] ? inputs[5].value : 'en';
 
-function showSuccess(containerId, message) {
-  let el = document.getElementById(containerId);
-  if (!el) {
-    el = document.createElement('div');
-    el.id = containerId;
-    el.style.cssText = 'color:#1a3c8f;font-size:13px;text-align:center;padding:8px;margin-top:8px;background:#e8eeff;border-radius:8px;';
-  }
-  el.textContent = message;
-  return el;
-}
-
-// ── SIGNUP ───────────────────────────────────────────────
-async function doSignup() {
-  const form = document.getElementById('modal-signup');
-  const inputs = form.querySelectorAll('.modal-input');
-  const name = inputs[0].value.trim();
-  const pin = inputs[1].value.trim();
-  const initiatedName = inputs[2].value.trim();
-  const guruName = inputs[3].value.trim();
-  const location = inputs[4].value.trim();
-  const language = inputs[5].value;
-
-  // Remove old error
-  const oldErr = document.getElementById('signup-error');
+  var oldErr = document.getElementById('auth-msg');
   if (oldErr) oldErr.remove();
-  const oldOk = document.getElementById('signup-success');
-  if (oldOk) oldOk.remove();
 
-  // Validate
   if (!name) {
-    const btn = form.querySelector('.modal-btn');
-    btn.parentNode.insertBefore(showError('signup-error', 'Please enter your name'), btn);
+    showAuthMsg(form, 'Please enter your name', true);
     return;
   }
-  if (!pin || pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-    const btn = form.querySelector('.modal-btn');
-    btn.parentNode.insertBefore(showError('signup-error', 'PIN must be exactly 4 digits'), btn);
+  if (!pin || pin.length !== 4) {
+    showAuthMsg(form, 'PIN must be exactly 4 digits', true);
     return;
   }
 
-  // Disable button
-  const btn = form.querySelector('.modal-btn');
-  const origText = btn.textContent;
+  var btn = form.querySelector('.modal-btn');
   btn.textContent = 'Creating account...';
   btn.disabled = true;
 
-  try {
-    const resp = await fetch('/api/auth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'signup',
-        name, pin, initiatedName, guruName, location, language
-      }),
-    });
-    const data = await resp.json();
-
+  fetch('/api/auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: 'signup',
+      name: name,
+      pin: pin,
+      initiatedName: initiatedName,
+      guruName: guruName,
+      location: loc,
+      language: lang
+    })
+  })
+  .then(function(resp) { return resp.json(); })
+  .then(function(data) {
+    btn.textContent = 'Begin Journey \u2192';
+    btn.disabled = false;
     if (data.success) {
       currentUser = data.user;
       localStorage.setItem('ag_user', JSON.stringify(data.user));
-      btn.parentNode.insertBefore(showSuccess('signup-success', data.message), btn);
-      setTimeout(() => {
+      showAuthMsg(form, data.message, false);
+      setTimeout(function() {
         closeModal();
         showLoggedInState();
       }, 1500);
     } else {
-      btn.parentNode.insertBefore(showError('signup-error', data.error || 'Signup failed'), btn);
+      showAuthMsg(form, data.error || 'Signup failed', true);
     }
-  } catch(e) {
-    btn.parentNode.insertBefore(showError('signup-error', 'Network error. Please try again.'), btn);
-  }
-
-  btn.textContent = origText;
-  btn.disabled = false;
+  })
+  .catch(function(e) {
+    btn.textContent = 'Begin Journey \u2192';
+    btn.disabled = false;
+    showAuthMsg(form, 'Network error. Please try again.', true);
+  });
 }
 
-// ── LOGIN ────────────────────────────────────────────────
-async function doLogin() {
-  const form = document.getElementById('modal-login');
-  const inputs = form.querySelectorAll('.modal-input');
-  const name = inputs[0].value.trim();
-  const pin = inputs[1].value.trim();
+function doLogin() {
+  var form = document.getElementById('modal-login');
+  var inputs = form.querySelectorAll('.modal-input');
+  var name = inputs[0].value.trim();
+  var pin = inputs[1].value.trim();
 
-  const oldErr = document.getElementById('login-error');
+  var oldErr = document.getElementById('auth-msg');
   if (oldErr) oldErr.remove();
-  const oldOk = document.getElementById('login-success');
-  if (oldOk) oldOk.remove();
 
   if (!name || !pin) {
-    const btn = form.querySelector('.modal-btn');
-    btn.parentNode.insertBefore(showError('login-error', 'Please enter name and PIN'), btn);
+    showAuthMsg(form, 'Please enter name and PIN', true);
     return;
   }
 
-  const btn = form.querySelector('.modal-btn');
-  const origText = btn.textContent;
+  var btn = form.querySelector('.modal-btn');
   btn.textContent = 'Signing in...';
   btn.disabled = true;
 
-  try {
-    const resp = await fetch('/api/auth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'login', name, pin }),
-    });
-    const data = await resp.json();
-
+  fetch('/api/auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'login', name: name, pin: pin })
+  })
+  .then(function(resp) { return resp.json(); })
+  .then(function(data) {
+    btn.textContent = 'Sign In \u2192';
+    btn.disabled = false;
     if (data.success) {
       currentUser = data.user;
       localStorage.setItem('ag_user', JSON.stringify(data.user));
-      btn.parentNode.insertBefore(showSuccess('login-success', data.message), btn);
-      setTimeout(() => {
+      showAuthMsg(form, data.message, false);
+      setTimeout(function() {
         closeModal();
         showLoggedInState();
       }, 1500);
     } else {
-      btn.parentNode.insertBefore(showError('login-error', data.error || 'Login failed'), btn);
+      showAuthMsg(form, data.error || 'Login failed', true);
     }
-  } catch(e) {
-    btn.parentNode.insertBefore(showError('login-error', 'Network error. Please try again.'), btn);
-  }
-
-  btn.textContent = origText;
-  btn.disabled = false;
+  })
+  .catch(function(e) {
+    btn.textContent = 'Sign In \u2192';
+    btn.disabled = false;
+    showAuthMsg(form, 'Network error. Please try again.', true);
+  });
 }
 
-// ── LOGOUT ───────────────────────────────────────────────
 function doLogout() {
   currentUser = null;
   localStorage.removeItem('ag_user');
-  const navActions = document.querySelector('.nav-actions');
+  var navActions = document.querySelector('.nav-actions');
   if (navActions) {
-    navActions.innerHTML = `
-      <button class="btn-login" onclick="openModal('login')">Sign In</button>
-      <button class="btn-start" onclick="openModal('signup')">Begin Journey</button>
-    `;
+    navActions.innerHTML = '<button class="btn-login" onclick="openModal(\'login\')">Sign In</button>' +
+      '<button class="btn-start" onclick="openModal(\'signup\')">Begin Journey</button>';
   }
 }
 
-// ── SAVE ANSWER ──────────────────────────────────────────
-async function saveAnswer(question, answer, references, acharya) {
+function showAuthMsg(form, message, isError) {
+  var el = document.createElement('div');
+  el.id = 'auth-msg';
+  if (isError) {
+    el.style.cssText = 'color:#dc2626;font-size:13px;text-align:center;padding:8px;margin-top:8px;background:#fef2f2;border-radius:8px;';
+  } else {
+    el.style.cssText = 'color:#1a3c8f;font-size:13px;text-align:center;padding:8px;margin-top:8px;background:#e8eeff;border-radius:8px;';
+  }
+  el.textContent = message;
+  var btn = form.querySelector('.modal-btn');
+  btn.parentNode.insertBefore(el, btn);
+}
+
+function saveAnswer(question, answer, references, acharya) {
   if (!currentUser) {
     openModal('login');
     return;
   }
-  try {
-    const resp = await fetch('/api/auth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'saveAnswer',
-        userId: currentUser.id,
-        question, answer, references, acharya
-      }),
-    });
-    const data = await resp.json();
-    if (data.success) {
-      alert('Answer saved to your journal! 🙏');
-    }
-  } catch(e) {
+  fetch('/api/auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      action: 'saveAnswer',
+      userId: currentUser.id,
+      question: question,
+      answer: answer,
+      references: references,
+      acharya: acharya
+    })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.success) alert('Answer saved to your journal!');
+  })
+  .catch(function() {
     alert('Could not save. Please try again.');
-  }
+  });
 }
 
-// ── JOURNAL ──────────────────────────────────────────────
-async function openJournal() {
-  if (!currentUser) {
-    openModal('login');
-    return;
-  }
-  try {
-    const resp = await fetch('/api/auth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'getJournal', userId: currentUser.id }),
-    });
-    const data = await resp.json();
-    if (data.success && data.savedAnswers) {
-      showJournalModal(data.savedAnswers);
-    }
-  } catch(e) {
-    alert('Could not load journal. Please try again.');
-  }
+function openJournal() {
+  if (!currentUser) { openModal('login'); return; }
+  fetch('/api/auth', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'getJournal', userId: currentUser.id })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(d) {
+    if (d.success) showJournalModal(d.savedAnswers);
+  })
+  .catch(function() { alert('Could not load journal.'); });
 }
 
 function showJournalModal(answers) {
-  // Create journal overlay
-  let overlay = document.getElementById('journal-overlay');
-  if (overlay) overlay.remove();
-
-  overlay = document.createElement('div');
+  var old = document.getElementById('journal-overlay');
+  if (old) old.remove();
+  var overlay = document.createElement('div');
   overlay.id = 'journal-overlay';
   overlay.style.cssText = 'position:fixed;inset:0;z-index:1001;background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;';
-  overlay.onclick = (e) => { if(e.target === overlay) overlay.remove(); };
-
-  const modal = document.createElement('div');
+  overlay.onclick = function(e) { if(e.target === overlay) overlay.remove(); };
+  var modal = document.createElement('div');
   modal.style.cssText = 'background:white;border-radius:28px;padding:40px;width:700px;max-width:90vw;max-height:80vh;overflow-y:auto;box-shadow:0 40px 80px rgba(0,0,0,0.2);';
-
-  let html = '<h2 style="font-family:Cormorant Garamond,serif;font-size:32px;color:#1a1a2e;margin-bottom:8px;">My Spiritual Journal</h2>';
-  html += '<p style="font-size:14px;color:#6b7280;margin-bottom:28px;">' + (answers.length || 0) + ' saved answers</p>';
-
+  var h = '<h2 style="font-family:Cormorant Garamond,serif;font-size:32px;color:#1a1a2e;margin-bottom:8px;">My Spiritual Journal</h2>';
+  h += '<p style="font-size:14px;color:#6b7280;margin-bottom:28px;">' + (answers ? answers.length : 0) + ' saved answers</p>';
   if (!answers || answers.length === 0) {
-    html += '<p style="color:#6b7280;text-align:center;padding:40px;">No saved answers yet. Ask Gauranga a question and save the answer! 🙏</p>';
+    h += '<p style="color:#6b7280;text-align:center;padding:40px;">No saved answers yet.</p>';
   } else {
-    answers.reverse().forEach(a => {
-      html += '<div style="border:1px solid rgba(43,74,203,0.12);border-radius:16px;padding:20px;margin-bottom:16px;">';
-      html += '<p style="font-size:12px;color:#6b7280;margin-bottom:8px;">' + (a.savedAt || '') + '</p>';
-      html += '<p style="font-weight:500;color:#1a3c8f;margin-bottom:8px;">Q: ' + (a.question || '') + '</p>';
-      html += '<p style="color:#1a1a2e;line-height:1.6;font-size:14px;">' + (a.answer || '').substring(0, 300) + '...</p>';
-      html += '</div>';
-    });
+    for (var i = answers.length - 1; i >= 0; i--) {
+      var a = answers[i];
+      h += '<div style="border:1px solid rgba(43,74,203,0.12);border-radius:16px;padding:20px;margin-bottom:16px;">';
+      h += '<p style="font-size:12px;color:#6b7280;margin-bottom:8px;">' + (a.savedAt || '') + '</p>';
+      h += '<p style="font-weight:500;color:#1a3c8f;margin-bottom:8px;">Q: ' + (a.question || '') + '</p>';
+      h += '<p style="color:#1a1a2e;line-height:1.6;font-size:14px;">' + (a.answer || '').substring(0, 300) + '...</p>';
+      h += '</div>';
+    }
   }
-
-  html += '<button onclick="this.closest('#journal-overlay').remove()" style="margin-top:16px;padding:12px 28px;border-radius:14px;border:none;background:#1a3c8f;color:white;font-size:14px;cursor:pointer;font-family:DM Sans,sans-serif;">Close Journal</button>';
-
-  modal.innerHTML = html;
+  h += '<button onclick="document.getElementById(\'journal-overlay\').remove()" style="margin-top:16px;padding:12px 28px;border-radius:14px;border:none;background:#1a3c8f;color:white;font-size:14px;cursor:pointer;">Close Journal</button>';
+  modal.innerHTML = h;
   overlay.appendChild(modal);
   document.body.appendChild(overlay);
 }
 
-// Check session on page load
 checkSession();
+
 </script>
 </body>
 </html>
