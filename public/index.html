@@ -962,8 +962,8 @@ footer {
     <p class="verse-text" id="daily-verse-text">
       One who is not disturbed in mind even amidst the <span class="verse-gold">threefold miseries</span> or elated when there is happiness, and who is free from attachment, fear and anger, is called a sage of <span class="verse-gold">steady mind.</span>
     </p>
-    <div class="verse-source">Bhagavad Gita 2.56 · Srila Prabhupada</div>
-    <div class="verse-date">Wednesday, June 3, 2026</div>
+    <div class="verse-source" id="daily-verse-ref">Bhagavad Gita 2.56 · Srila Prabhupada</div>
+    <div class="verse-date" id="daily-verse-date"></div>
   </div>
 </section>
 
@@ -1790,173 +1790,148 @@ checkSession();
 </script>
 
 <script>
-// VAISHNAVA CALENDAR 2026 — Official ISKCON Data (Drik Panchang / GBC GCal)
-// Source: 2026 ISKCON Festivals Calendar & Ekadashi List, New Delhi IST
+// VAISHNAVA CALENDAR 2026 — Official ISKCON Data
 var calendarData = {
   1: [
-    {d:3,  name:"Shri Krishna Pushya Abhisheka", type:"festival", desc:"Auspicious abhisheka ceremony of Lord Krishna on Pushya Nakshatra. Narayana Purnima.", parana:""},
-    {d:7,  name:"Shrila Gopala Bhatta Goswami — Appearance", type:"appearance", desc:"One of the Six Goswamis of Vrindavan, compiler of Hari-bhakti-vilasa.", parana:""},
-    {d:7,  name:"Shri Ramachandra Kaviraja — Disappearance", type:"disappearance", desc:"Disappearance of Shri Ramachandra Kaviraja.", parana:""},
-    {d:8,  name:"Shri Jayadeva Goswami — Disappearance", type:"disappearance", desc:"Disappearance of the author of Gita Govinda.", parana:""},
-    {d:9,  name:"Shri Lochana Dasa Thakura — Disappearance", type:"disappearance", desc:"Disappearance of the great Vaishnava poet.", parana:""},
-    {d:14, name:"Shat Tila Ekadashi", type:"ekadashi", desc:"Six uses of sesame (til). Devotees donate, bathe with, eat, and offer sesame to Vishnu. Krishna Paksha, Magha.", parana:"Parana: 07:15 AM to 10:45 AM (Jan 15)
-Tithi Begins: 03:17 PM Jan 13 | Ends: 05:52 PM Jan 14"},
-    {d:15, name:"Ganga Sagara Mela — Makara Sankranti", type:"festival", desc:"Sacred festival at the confluence of Ganga and sea.", parana:""},
+    {d:3, name:"Shri Krishna Pushya Abhisheka", type:"festival", desc:"Auspicious abhisheka ceremony of Lord Krishna on Pushya Nakshatra. Narayana Purnima.", parana:""},
+    {d:7, name:"Shrila Gopala Bhatta Goswami — Appearance", type:"appearance", desc:"One of the Six Goswamis of Vrindavan, compiler of Hari-bhakti-vilasa.", parana:""},
+    {d:7, name:"Shri Ramachandra Kaviraja — Disappearance", type:"disappearance", desc:"Disappearance of Shri Ramachandra Kaviraja.", parana:""},
+    {d:8, name:"Shri Jayadeva Goswami — Disappearance", type:"disappearance", desc:"Disappearance of the author of Gita Govinda.", parana:""},
+    {d:9, name:"Shri Lochana Dasa Thakura — Disappearance", type:"disappearance", desc:"Disappearance of the great Vaishnava poet.", parana:""},
+    {d:14, name:"Shat Tila Ekadashi", type:"ekadashi", desc:"Six uses of sesame (til). Devotees donate, bathe with, eat and offer sesame to Vishnu. Krishna Paksha, Magha.", parana:"Parana: 07:15 AM to 10:45 AM (Jan 15)\nTithi Begins: 03:17 PM Jan 13 | Ends: 05:52 PM Jan 14"},
+    {d:15, name:"Ganga Sagara Mela — Makara Sankranti", type:"festival", desc:"Sacred festival at the confluence of Ganga and the sea.", parana:""},
     {d:23, name:"Vasanta Panchami — Saraswati Puja", type:"festival", desc:"Appearance of Shrimati Vishnupriya Devi, Shri Pundarika Vidyanidhi, Shri Raghunandana Thakura, Shrila Raghunatha Dasa Goswami. Disappearance of Shrila Vishwanatha Chakravarti Thakura.", parana:""},
     {d:25, name:"Shri Advaita Acharya — Appearance", type:"appearance", desc:"Appearance of Shri Advaita Acharya, associate of Lord Chaitanya.", parana:""},
     {d:26, name:"Bhishmashtami", type:"festival", desc:"Sacred day commemorating Bhishma Pitamaha.", parana:""},
     {d:27, name:"Shri Madhvacharya — Disappearance", type:"disappearance", desc:"Disappearance of the great Vaishnava acharya.", parana:""},
     {d:28, name:"Shri Ramanujacharya — Disappearance", type:"disappearance", desc:"Disappearance of the great Sri Sampradaya acharya.", parana:""},
-    {d:29, name:"Bhaimi (Jaya) Ekadashi", type:"ekadashi", desc:"Frees devotees from cycle of ghostly existence. Gaura Paksha, Magha.", parana:"Parana: 07:10 AM to 10:47 AM (Jan 30)
-Tithi Begins: 04:35 PM Jan 28 | Ends: 01:55 PM Jan 29"},
+    {d:29, name:"Bhaimi (Jaya) Ekadashi", type:"ekadashi", desc:"Frees devotees from the cycle of ghostly existence. Gaura Paksha, Magha.", parana:"Parana: 07:10 AM to 10:47 AM (Jan 30)\nTithi Begins: 04:35 PM Jan 28 | Ends: 01:55 PM Jan 29"},
     {d:30, name:"Varaha Dvadashi — Appearance of Lord Varahadeva", type:"appearance", desc:"Appearance of Lord Varaha, the boar incarnation of Vishnu.", parana:""},
-    {d:31, name:"Nityananda Trayodashi — Appearance of Shri Nityananda Prabhu", type:"appearance", desc:"Most merciful appearance of Lord Nityananda, the avadhuta who distributed love of God without discrimination.", parana:""},
+    {d:31, name:"Nityananda Trayodashi — Appearance of Shri Nityananda Prabhu", type:"appearance", desc:"Most merciful appearance of Lord Nityananda, the avadhuta who distributed love of God without discrimination.", parana:""}
   ],
   2: [
-    {d:1,  name:"Shrila Narottama Dasa Thakura — Appearance", type:"appearance", desc:"Appearance of the great acharya and author of many Vaishnava songs.", parana:""},
-    {d:6,  name:"Shrila Bhaktisiddhanta Sarasvati Thakura — Appearance", type:"appearance", desc:"Appearance of Shrila Prabhupada's spiritual master (1874), who revived Gaudiya Vaishnavism globally.", parana:""},
-    {d:13, name:"Vijaya Ekadashi", type:"ekadashi", desc:"Lord Rama observed Vijaya Ekadashi before crossing to Lanka. Grants victory over obstacles. Krishna Paksha, Phalguna.", parana:"Parana: 07:00 AM to 10:44 AM (Feb 14)
-Tithi Begins: 12:22 PM Feb 12 | Ends: 02:25 PM Feb 13"},
+    {d:1, name:"Shrila Narottama Dasa Thakura — Appearance", type:"appearance", desc:"Appearance of the great acharya and author of many Vaishnava songs.", parana:""},
+    {d:6, name:"Shrila Bhaktisiddhanta Sarasvati Thakura — Appearance", type:"appearance", desc:"Appearance of Shrila Prabhupada spiritual master (1874), who revived Gaudiya Vaishnavism globally.", parana:""},
+    {d:13, name:"Vijaya Ekadashi", type:"ekadashi", desc:"Lord Rama observed this before crossing to Lanka. Grants victory over obstacles. Krishna Paksha, Phalguna.", parana:"Parana: 07:00 AM to 10:44 AM (Feb 14)\nTithi Begins: 12:22 PM Feb 12 | Ends: 02:25 PM Feb 13"},
     {d:14, name:"Shri Ishvara Puri — Disappearance", type:"disappearance", desc:"Disappearance of Shri Ishvara Puri, initiating guru of Lord Chaitanya.", parana:""},
     {d:16, name:"Shiva Ratri", type:"festival", desc:"Sacred night of Lord Shiva.", parana:""},
     {d:18, name:"Shrila Jagannatha Dasa Babaji — Disappearance", type:"disappearance", desc:"Disappearance of the great rasika Vaishnava.", parana:""},
     {d:21, name:"Shri Purushottama Dasa Thakura — Appearance", type:"appearance", desc:"Appearance of Shri Purushottama Dasa Thakura.", parana:""},
-    {d:27, name:"Amalaki Ekadashi", type:"ekadashi", desc:"Dedicated to sacred Amla tree, incarnation of Lord Vishnu. Gaura Paksha, Phalguna.", parana:"Parana: 06:47 AM to 10:38 AM (Feb 28)
-Tithi Begins: 12:33 AM Feb 27 | Ends: 10:32 PM Feb 27"},
-    {d:28, name:"Shri Madhavendra Puri — Disappearance", type:"disappearance", desc:"Disappearance of Shri Madhavendra Puri, from whose devotional tree the Gaudiya sampradaya grew.", parana:""},
+    {d:27, name:"Amalaki Ekadashi", type:"ekadashi", desc:"Dedicated to the sacred Amla tree, an incarnation of Lord Vishnu. Highly meritorious. Gaura Paksha, Phalguna.", parana:"Parana: 06:47 AM to 10:38 AM (Feb 28)\nTithi Begins: 12:33 AM Feb 27 | Ends: 10:32 PM Feb 27"},
+    {d:28, name:"Shri Madhavendra Puri — Disappearance", type:"disappearance", desc:"Disappearance of Shri Madhavendra Puri, from whose devotional tree the Gaudiya sampradaya grew.", parana:""}
   ],
   3: [
-    {d:3,  name:"Gaura Purnima — Appearance of Shri Chaitanya Mahaprabhu", type:"festival", desc:"Most auspicious appearance of Lord Gauranga (1486). Festival of fasting until moonrise, then grand celebration. The golden avatar who distributed love of Krishna freely.", parana:""},
-    {d:4,  name:"Festival of Jagannatha Mishra", type:"festival", desc:"Celebration of the joy of Lord Chaitanya's father.", parana:""},
+    {d:3, name:"Gaura Purnima — Appearance of Shri Chaitanya Mahaprabhu", type:"festival", desc:"Most auspicious appearance of Lord Gauranga (1486). Fast until moonrise then grand celebration. The golden avatar who distributed love of Krishna freely.", parana:""},
+    {d:4, name:"Festival of Jagannatha Mishra", type:"festival", desc:"Celebration of the joy of Jagannatha Mishra, Lord Chaitanya father.", parana:""},
     {d:11, name:"Shri Shrivasa Pandita — Appearance", type:"appearance", desc:"Appearance of Shrivasa Pandita, one of the Pancha Tattva.", parana:""},
-    {d:15, name:"Papamochani Ekadashi", type:"ekadashi", desc:"Destroyer of sins. Highly auspicious for spiritual cleansing. Krishna Paksha, Chaitra.", parana:"Parana: 06:30 AM to 09:40 AM (Mar 16)
-Tithi Begins: 08:10 AM Mar 14 | Ends: 09:16 AM Mar 15"},
+    {d:15, name:"Papamochani Ekadashi", type:"ekadashi", desc:"Destroyer of sins. Highly auspicious for spiritual cleansing. Krishna Paksha, Chaitra.", parana:"Parana: 06:30 AM to 09:40 AM (Mar 16)\nTithi Begins: 08:10 AM Mar 14 | Ends: 09:16 AM Mar 15"},
     {d:16, name:"Shri Govinda Ghosh — Disappearance", type:"disappearance", desc:"Disappearance of the great kirtan singer of Lord Chaitanya.", parana:""},
     {d:23, name:"Shri Ramanujacharya — Appearance", type:"appearance", desc:"Appearance of the great Vaishnava philosopher.", parana:""},
     {d:27, name:"Rama Navami — Appearance of Lord Shri Ramachandra", type:"festival", desc:"Glorious appearance of Lord Ramachandra, the perfect king and avatar.", parana:""},
-    {d:29, name:"Kamada Ekadashi", type:"ekadashi", desc:"Wish-fulfiller. Grants spiritual and material blessings. Gaura Paksha, Chaitra.", parana:"Parana: 06:14 AM to 07:09 AM (Mar 30)
-Tithi Begins: 08:45 AM Mar 28 | Ends: 07:46 AM Mar 29"},
-    {d:30, name:"Damanakaropana Dvadashi", type:"festival", desc:"Auspicious dvadashi day.", parana:""},
+    {d:29, name:"Kamada Ekadashi", type:"ekadashi", desc:"Wish-fulfiller. Grants spiritual and material blessings. Gaura Paksha, Chaitra.", parana:"Parana: 06:14 AM to 07:09 AM (Mar 30)\nTithi Begins: 08:45 AM Mar 28 | Ends: 07:46 AM Mar 29"},
+    {d:30, name:"Damanakaropana Dvadashi", type:"festival", desc:"Auspicious dvadashi day.", parana:""}
   ],
   4: [
-    {d:2,  name:"Shri Balarama Rasayatra & Krishna Vasanta Rasa", type:"festival", desc:"Appearance of Shri Shyamananda Prabhu and Shri Vamshivadana Thakura.", parana:""},
-    {d:9,  name:"Shri Abhirama Thakura — Disappearance", type:"disappearance", desc:"Disappearance of Shri Abhirama Thakura.", parana:""},
+    {d:2, name:"Shri Balarama Rasayatra and Krishna Vasanta Rasa", type:"festival", desc:"Appearance of Shri Shyamananda Prabhu and Shri Vamshivadana Thakura.", parana:""},
+    {d:9, name:"Shri Abhirama Thakura — Disappearance", type:"disappearance", desc:"Disappearance of Shri Abhirama Thakura.", parana:""},
     {d:12, name:"Shrila Vrindavana Dasa Thakura — Disappearance", type:"disappearance", desc:"Disappearance of the author of Chaitanya Bhagavata.", parana:""},
-    {d:13, name:"Varuthini Ekadashi", type:"ekadashi", desc:"Protector from sin. Helps overcome karmic burdens. Krishna Paksha, Vaishakha.", parana:"Parana: 06:54 AM to 10:13 AM (Apr 14)
-Tithi Begins: 01:16 AM Apr 13 | Ends: 01:08 AM Apr 14"},
+    {d:13, name:"Varuthini Ekadashi", type:"ekadashi", desc:"Protector from sin. Helps overcome karmic burdens. Krishna Paksha, Vaishakha.", parana:"Parana: 06:54 AM to 10:13 AM (Apr 14)\nTithi Begins: 01:16 AM Apr 13 | Ends: 01:08 AM Apr 14"},
     {d:14, name:"Beginning of Tulasi Jala Dan", type:"festival", desc:"Offering water to Tulasi Devi begins on Mesha Sankranti.", parana:""},
     {d:17, name:"Shri Gadadhara Pandita — Appearance", type:"appearance", desc:"Appearance of Shri Gadadhara Pandita, the shakti of Lord Gauranga.", parana:""},
     {d:20, name:"Akshaya Tritiya — Chandana Yatra Begins", type:"festival", desc:"Most auspicious day for new beginnings. Chandana Yatra continues for 21 days.", parana:""},
     {d:23, name:"Jahnu Saptami", type:"festival", desc:"Sacred day of Rishi Jahnu.", parana:""},
-    {d:25, name:"Shrimati Sita Devi & Shrimati Jahnava Devi — Appearance", type:"appearance", desc:"Appearance of consort of Lord Rama and Jahnava Devi.", parana:""},
-    {d:27, name:"Mohini Ekadashi", type:"ekadashi", desc:"Lord Vishnu's enchanting Mohini form. Purification from illusion. Gaura Paksha, Vaishakha.", parana:"Parana: 05:43 AM to 10:07 AM (Apr 28)
-Tithi Begins: 06:06 PM Apr 26 | Ends: 06:15 PM Apr 27"},
+    {d:25, name:"Shrimati Sita Devi and Shrimati Jahnava Devi — Appearance", type:"appearance", desc:"Appearance of the consort of Lord Rama and Jahnava Devi.", parana:""},
+    {d:27, name:"Mohini Ekadashi", type:"ekadashi", desc:"Lord Vishnu enchanting Mohini form. Purification from illusion and attachment. Gaura Paksha, Vaishakha.", parana:"Parana: 05:43 AM to 10:07 AM (Apr 28)\nTithi Begins: 06:06 PM Apr 26 | Ends: 06:15 PM Apr 27"},
     {d:28, name:"Rukmini Dvadashi", type:"festival", desc:"Sacred day of Shrimati Rukmini Devi.", parana:""},
     {d:29, name:"Shri Jayananda Prabhu — Disappearance", type:"disappearance", desc:"Disappearance of the beloved devotee who organized Ratha Yatra in San Francisco.", parana:""},
-    {d:30, name:"Narasimha Chaturdashi — Appearance of Lord Narasimhadeva", type:"appearance", desc:"Lord Narasimha appeared to protect Prahlada Maharaja. Fast observed until dusk.", parana:""},
+    {d:30, name:"Narasimha Chaturdashi — Appearance of Lord Narasimhadeva", type:"appearance", desc:"Lord Narasimha appeared to protect Prahlada Maharaja. Fast observed until dusk.", parana:""}
   ],
   5: [
-    {d:1,  name:"Krishna Phula Dola — Salila Vihara", type:"festival", desc:"Appearance of Shri Shri Radha Ramana Devaji, Shri Madhavendra Puri, Shri Shrinivasa Acharya.", parana:""},
-    {d:7,  name:"Shri Ramananda Raya — Disappearance", type:"disappearance", desc:"Disappearance of Shri Ramananda Raya, intimate associate of Lord Chaitanya.", parana:""},
-    {d:13, name:"Apara Ekadashi", type:"ekadashi", desc:"Infinite merit. Removes sins, misfortune and obstacles. Krishna Paksha, Jyeshtha.", parana:"Parana: 05:31 AM to 10:02 AM (May 14)
-Tithi Begins: 02:52 PM May 12 | Ends: 01:29 PM May 13"},
+    {d:1, name:"Krishna Phula Dola — Salila Vihara", type:"festival", desc:"Appearance of Shri Shri Radha Ramana Devaji, Shri Madhavendra Puri, Shri Shrinivasa Acharya.", parana:""},
+    {d:7, name:"Shri Ramananda Raya — Disappearance", type:"disappearance", desc:"Disappearance of Shri Ramananda Raya, intimate associate of Lord Chaitanya.", parana:""},
+    {d:13, name:"Apara Ekadashi", type:"ekadashi", desc:"Infinite merit. Removes sins, misfortune and obstacles. Krishna Paksha, Jyeshtha.", parana:"Parana: 05:31 AM to 10:02 AM (May 14)\nTithi Begins: 02:52 PM May 12 | Ends: 01:29 PM May 13"},
     {d:14, name:"End of Tulasi Jala Dan — Shrila Vrindavana Dasa Thakura Appearance", type:"festival", desc:"Tulasi Jala Dan ends. Appearance of Vrindavana Dasa Thakura.", parana:""},
-    {d:27, name:"Padmini Ekadashi (Adhika Masa)", type:"ekadashi", desc:"Rare Adhik Maas Ekadashi. Merit of multiple Ekadashis combined. Gaura Paksha, Adhika Jyeshtha.", parana:"Parana: 05:25 AM to 07:56 AM (May 28)
-Tithi Begins: 05:10 AM May 26 | Ends: 06:21 AM May 27"},
+    {d:27, name:"Padmini Ekadashi (Adhika Masa)", type:"ekadashi", desc:"Rare Adhik Maas Ekadashi. Merit of multiple Ekadashis combined. Gaura Paksha, Adhika Jyeshtha.", parana:"Parana: 05:25 AM to 07:56 AM (May 28)\nTithi Begins: 05:10 AM May 26 | Ends: 06:21 AM May 27"}
   ],
   6: [
-    {d:11, name:"Parama Ekadashi (Adhika Masa)", type:"ekadashi", desc:"Rare Adhik Maas Ekadashi. Immense spiritual merit. Krishna Paksha, Adhika Jyeshtha.", parana:"Parana: 05:23 AM to 10:02 AM (Jun 12)
-Tithi Begins: 12:57 AM Jun 11 | Ends: 10:36 PM Jun 11"},
+    {d:11, name:"Parama Ekadashi (Adhika Masa)", type:"ekadashi", desc:"Rare Adhik Maas Ekadashi. Immense spiritual merit. Krishna Paksha, Adhika Jyeshtha.", parana:"Parana: 05:23 AM to 10:02 AM (Jun 12)\nTithi Begins: 12:57 AM Jun 11 | Ends: 10:36 PM Jun 11"},
     {d:24, name:"Ganga Puja — Shrimati Gangamata Goswamini Appearance", type:"festival", desc:"Sacred Ganga Puja. Disappearance of Shri Baladeva Vidyabhushana.", parana:""},
-    {d:25, name:"Pandava Nirjala Ekadashi", type:"ekadashi", desc:"The most sacred Ekadashi — complete fast without water. Grants merit of all 24 Ekadashis combined. Gaura Paksha, Jyeshtha.", parana:"Parana: 05:25 AM to 10:04 AM (Jun 26)
-Tithi Begins: 06:12 PM Jun 24 | Ends: 08:09 PM Jun 25"},
-    {d:27, name:"Panihati Chida Dahi Utsava", type:"festival", desc:"Festival of chipped rice and yogurt, celebrating Raghunatha Dasa's pastime with Lord Nityananda.", parana:""},
+    {d:25, name:"Pandava Nirjala Ekadashi", type:"ekadashi", desc:"The most sacred Ekadashi — complete fast without water for 24 hours. Grants merit of all 24 Ekadashis combined. Gaura Paksha, Jyeshtha.", parana:"Parana: 05:25 AM to 10:04 AM (Jun 26)\nTithi Begins: 06:12 PM Jun 24 | Ends: 08:09 PM Jun 25"},
+    {d:27, name:"Panihati Chida Dahi Utsava", type:"festival", desc:"Festival of chipped rice and yogurt, celebrating Raghunatha Dasa pastime with Lord Nityananda.", parana:""},
     {d:29, name:"Snana Yatra", type:"festival", desc:"Bathing festival of Lord Jagannatha. Disappearance of Shri Mukunda Datta and Shri Shridhara Pandita.", parana:""},
-    {d:30, name:"Shri Shyamananda Prabhu — Disappearance", type:"disappearance", desc:"Disappearance of Shri Shyamananda Prabhu.", parana:""},
+    {d:30, name:"Shri Shyamananda Prabhu — Disappearance", type:"disappearance", desc:"Disappearance of Shri Shyamananda Prabhu.", parana:""}
   ],
   7: [
-    {d:5,  name:"Shri Vakreshwara Pandita — Appearance", type:"appearance", desc:"Appearance of the ecstatic kirtan dancer of Lord Chaitanya.", parana:""},
+    {d:5, name:"Shri Vakreshwara Pandita — Appearance", type:"appearance", desc:"Appearance of the ecstatic kirtan dancer of Lord Chaitanya.", parana:""},
     {d:10, name:"Shri Shrivasa Pandita — Disappearance", type:"disappearance", desc:"Disappearance of Shrivasa Pandita.", parana:""},
-    {d:11, name:"Yogini Ekadashi", type:"ekadashi", desc:"Highly purifying. Destroys suffering and negative karma. Krishna Paksha, Ashadha.", parana:"Parana: 05:32 AM to 10:08 AM (Jul 12)
-Tithi Begins: 08:16 AM Jul 10 | Ends: 05:22 AM Jul 11"},
-    {d:14, name:"Shrila Bhaktivinoda Thakura — Disappearance & Gadadhara Pandita Disappearance", type:"disappearance", desc:"Disappearance of Shrila Bhaktivinoda Thakura (1914), pioneer who revived Gaudiya Vaishnavism.", parana:""},
+    {d:11, name:"Yogini Ekadashi", type:"ekadashi", desc:"Highly purifying. Destroys suffering and negative karma. Krishna Paksha, Ashadha.", parana:"Parana: 05:32 AM to 10:08 AM (Jul 12)\nTithi Begins: 08:16 AM Jul 10 | Ends: 05:22 AM Jul 11"},
+    {d:14, name:"Shrila Bhaktivinoda Thakura — Disappearance", type:"disappearance", desc:"Disappearance of Shrila Bhaktivinoda Thakura (1914), pioneer who revived Gaudiya Vaishnavism.", parana:""},
     {d:15, name:"Gundica Marjana", type:"festival", desc:"Cleansing of Gundica temple one day before Ratha Yatra.", parana:""},
     {d:16, name:"Ratha Yatra", type:"festival", desc:"Grand chariot festival of Lord Jagannatha, Baladeva and Subhadra. ISKCON celebrates worldwide. Disappearance of Shri Shivananda Sena and Shri Svarupa Damodara Goswami.", parana:""},
     {d:19, name:"Shri Vakreshwara Pandita — Disappearance", type:"disappearance", desc:"Disappearance of Shri Vakreshwara Pandita.", parana:""},
-    {d:20, name:"Hera Panchami", type:"festival", desc:"Four days after Ratha Yatra — Lakshmi Devi searches for Lord Jagannatha.", parana:""},
-    {d:24, name:"Return Ratha Yatra (Ulta Rath)", type:"festival", desc:"Return chariot festival — Lord Jagannatha returns to His temple.", parana:""},
-    {d:25, name:"Sayana (Shayani) Ekadashi", type:"ekadashi", desc:"Lord Vishnu enters Yoga Nidra. Beginning of Chaturmasya. Gaura Paksha, Ashadha.", parana:"Parana: 05:39 AM to 10:11 AM (Jul 26)
-Tithi Begins: 09:12 AM Jul 24 | Ends: 11:34 AM Jul 25"},
-    {d:29, name:"Guru (Vyasa) Purnima — 1st Chaturmasya Begins", type:"festival", desc:"Day to honor the Guru and Shrila Vyasadeva. 1st Chaturmasya begins — green leafy vegetable fast. Disappearance of Shrila Sanatana Goswami.", parana:""},
+    {d:20, name:"Hera Panchami", type:"festival", desc:"Four days after Ratha Yatra. Lakshmi Devi searches for Lord Jagannatha.", parana:""},
+    {d:24, name:"Return Ratha Yatra (Ulta Rath)", type:"festival", desc:"Return chariot festival. Lord Jagannatha returns to His temple.", parana:""},
+    {d:25, name:"Sayana (Shayani) Ekadashi", type:"ekadashi", desc:"Lord Vishnu enters Yoga Nidra. Beginning of Chaturmasya. Gaura Paksha, Ashadha.", parana:"Parana: 05:39 AM to 10:11 AM (Jul 26)\nTithi Begins: 09:12 AM Jul 24 | Ends: 11:34 AM Jul 25"},
+    {d:29, name:"Guru (Vyasa) Purnima — 1st Chaturmasya Begins", type:"festival", desc:"Day to honor the Guru and Shrila Vyasadeva. 1st Chaturmasya begins — green leafy vegetable fast. Disappearance of Shrila Sanatana Goswami.", parana:""}
   ],
   8: [
-    {d:3,  name:"Shrila Gopala Bhatta Goswami — Disappearance", type:"disappearance", desc:"Disappearance of one of the Six Goswamis.", parana:""},
-    {d:6,  name:"Shrila Lokanatha Goswami — Disappearance", type:"disappearance", desc:"Disappearance of Shrila Lokanatha Goswami.", parana:""},
-    {d:7,  name:"Incorporation of ISKCON in New York", type:"festival", desc:"Anniversary of ISKCON's incorporation (1966) by Shrila Prabhupada.", parana:""},
-    {d:9,  name:"Kamika Ekadashi", type:"ekadashi", desc:"Fulfils wishes. Worship with Tulsi brings special grace. Krishna Paksha, Shravana.", parana:"Parana: 05:47 AM to 08:00 AM (Aug 10)
-Tithi Begins: 01:59 PM Aug 08 | Ends: 11:04 AM Aug 09"},
+    {d:3, name:"Shrila Gopala Bhatta Goswami — Disappearance", type:"disappearance", desc:"Disappearance of one of the Six Goswamis.", parana:""},
+    {d:6, name:"Shrila Lokanatha Goswami — Disappearance", type:"disappearance", desc:"Disappearance of Shrila Lokanatha Goswami.", parana:""},
+    {d:7, name:"Incorporation of ISKCON in New York", type:"festival", desc:"Anniversary of ISKCON incorporation (1966) by Shrila Prabhupada.", parana:""},
+    {d:9, name:"Kamika Ekadashi", type:"ekadashi", desc:"Fulfils wishes. Worship with Tulsi brings special grace. Krishna Paksha, Shravana.", parana:"Parana: 05:47 AM to 08:00 AM (Aug 10)\nTithi Begins: 01:59 PM Aug 08 | Ends: 11:04 AM Aug 09"},
     {d:23, name:"Radha Govinda Jhulana Yatra Begins", type:"festival", desc:"Swing festival of Radha and Govinda begins.", parana:""},
-    {d:24, name:"Pavitropana Ekadashi — Vyanjuli Mahadvadashi", type:"ekadashi", desc:"Sacred purification fast. Last day of 1st Chaturmasya. Disappearance of Shrila Rupa Goswami and Shri Gauridasa Pandita. Gaura Paksha, Shravana.", parana:"Parana: 05:55 AM to 06:20 AM (Aug 25)
-Tithi Begins: 02:00 AM Aug 23 | Ends: 04:18 AM Aug 24"},
+    {d:24, name:"Pavitropana Ekadashi — Vyanjuli Mahadvadashi", type:"ekadashi", desc:"Sacred purification fast. Last day of 1st Chaturmasya. Disappearance of Shrila Rupa Goswami and Shri Gauridasa Pandita. Gaura Paksha, Shravana.", parana:"Parana: 05:55 AM to 06:20 AM (Aug 25)\nTithi Begins: 02:00 AM Aug 23 | Ends: 04:18 AM Aug 24"},
     {d:27, name:"Last Day of 1st Chaturmasya", type:"festival", desc:"Concluding day of the first Chaturmasya period.", parana:""},
-    {d:28, name:"Lord Balarama — Appearance Day & Jhulana Yatra Ends", type:"appearance", desc:"Appearance of Lord Balarama, the first expansion of Krishna and source of all spiritual strength. Jhulana Yatra concludes. 2nd Chaturmasya begins — yogurt fast.", parana:""},
-    {d:29, name:"Shrila Prabhupada's Departure for the USA", type:"festival", desc:"Anniversary of Shrila Prabhupada's historic departure to America (1965).", parana:""},
+    {d:28, name:"Lord Balarama — Appearance Day", type:"appearance", desc:"Appearance of Lord Balarama, the first expansion of Krishna and source of all spiritual strength. Jhulana Yatra concludes. 2nd Chaturmasya begins.", parana:""},
+    {d:29, name:"Shrila Prabhupada Departure for the USA", type:"festival", desc:"Anniversary of Shrila Prabhupada historic departure to America (1965).", parana:""}
   ],
   9: [
-    {d:4,  name:"Shri Krishna Janmashtami — Appearance of Lord Shri Krishna", type:"festival", desc:"Divine appearance of Lord Sri Krishna, the Supreme Personality of Godhead (3228 BC). Fasting until midnight. Grand midnight celebration with abhisheka and kirtan.", parana:""},
-    {d:5,  name:"Nandotsava & Shrila Prabhupada — Appearance (Vyasa Puja)", type:"appearance", desc:"Celebration of Nanda Maharaja's joy. Appearance of A.C. Bhaktivedanta Swami Prabhupada (1896), founder-acharya of ISKCON.", parana:""},
-    {d:7,  name:"Annada Ekadashi", type:"ekadashi", desc:"Charity and feeding the needy. Grants purification and sustenance. Krishna Paksha, Bhadra.", parana:"Parana: 06:02 AM to 10:13 AM (Sep 8)
-Tithi Begins: 07:29 PM Sep 06 | Ends: 05:03 PM Sep 07"},
-    {d:16, name:"Shrimati Sita Thakurani — Appearance", type:"appearance", desc:"Appearance of Shri Advaita Acharya's consort.", parana:""},
+    {d:4, name:"Shri Krishna Janmashtami — Appearance of Lord Shri Krishna", type:"festival", desc:"Divine appearance of Lord Sri Krishna, the Supreme Personality of Godhead. Fasting until midnight. Grand midnight celebration with abhisheka and kirtan.", parana:""},
+    {d:5, name:"Nandotsava and Shrila Prabhupada — Appearance (Vyasa Puja)", type:"appearance", desc:"Celebration of Nanda Maharaja joy. Appearance of A.C. Bhaktivedanta Swami Prabhupada (1896), founder-acharya of ISKCON.", parana:""},
+    {d:7, name:"Annada Ekadashi", type:"ekadashi", desc:"Charity and feeding the needy. Grants purification and sustenance. Krishna Paksha, Bhadra.", parana:"Parana: 06:02 AM to 10:13 AM (Sep 8)\nTithi Begins: 07:29 PM Sep 06 | Ends: 05:03 PM Sep 07"},
+    {d:16, name:"Shrimati Sita Thakurani — Appearance", type:"appearance", desc:"Appearance of Shri Advaita Acharya consort.", parana:""},
     {d:17, name:"Lalita Shashthi", type:"festival", desc:"Sacred day of Lalita Sakhi, intimate friend of Shrimati Radharani.", parana:""},
     {d:19, name:"Radhashtami — Appearance of Shrimati Radharani", type:"appearance", desc:"Appearance of Shrimati Radharani, the supreme devotee and pleasure potency of Lord Krishna. Fast until noon.", parana:""},
-    {d:22, name:"Parshva Ekadashi", type:"ekadashi", desc:"Lord Vishnu turns sides during Chaturmasya sleep. Gaura Paksha, Bhadra.", parana:"Parana: 06:10 AM to 10:12 AM (Sep 23)
-Tithi Begins: 08:00 PM Sep 21 | Ends: 09:43 PM Sep 22"},
-    {d:23, name:"Shri Vamana Dvadashi — Appearance of Lord Vamanadeva & Shrila Jiva Goswami Appearance", type:"appearance", desc:"Appearance of Lord Vamana. Appearance of Shrila Jiva Goswami.", parana:""},
+    {d:22, name:"Parshva Ekadashi", type:"ekadashi", desc:"Lord Vishnu turns sides during Chaturmasya sleep. Gaura Paksha, Bhadra.", parana:"Parana: 06:10 AM to 10:12 AM (Sep 23)\nTithi Begins: 08:00 PM Sep 21 | Ends: 09:43 PM Sep 22"},
+    {d:23, name:"Shri Vamana Dvadashi and Shrila Jiva Goswami — Appearance", type:"appearance", desc:"Appearance of Lord Vamana. Appearance of Shrila Jiva Goswami.", parana:""},
     {d:24, name:"Shrila Bhaktivinoda Thakura — Appearance", type:"appearance", desc:"Appearance of Shrila Bhaktivinoda Thakura (1838), who revived pure devotional service.", parana:""},
-    {d:25, name:"Ananta Chaturdashi — Last day of 2nd Chaturmasya — Shrila Haridasa Thakura Disappearance", type:"disappearance", desc:"Disappearance of Shrila Haridasa Thakura, the namacharya who chanted 300,000 names daily.", parana:""},
-    {d:26, name:"Shri Vishwarupa Mahotsava — 3rd Chaturmasya Begins", type:"festival", desc:"3rd Chaturmasya begins — milk fast. Acceptance of Sannyasa by Shrila Prabhupada.", parana:""},
+    {d:25, name:"Ananta Chaturdashi — Shrila Haridasa Thakura Disappearance", type:"disappearance", desc:"Disappearance of Shrila Haridasa Thakura, the namacharya who chanted 300,000 names daily.", parana:""},
+    {d:26, name:"Shri Vishwarupa Mahotsava — 3rd Chaturmasya Begins", type:"festival", desc:"3rd Chaturmasya begins — milk fast.", parana:""}
   ],
   10: [
-    {d:3,  name:"Shrila Prabhupada's Arrival in the USA", type:"festival", desc:"Anniversary of Shrila Prabhupada's arrival in Boston (1965).", parana:""},
-    {d:6,  name:"Indira Ekadashi", type:"ekadashi", desc:"Observed during Pitru Paksha. Grants liberation to ancestors. Krishna Paksha, Ashvina.", parana:"Parana: 06:17 AM to 10:12 AM (Oct 7)
-Tithi Begins: 02:07 AM Oct 06 | Ends: 12:34 AM Oct 07"},
+    {d:3, name:"Shrila Prabhupada Arrival in the USA", type:"festival", desc:"Anniversary of Shrila Prabhupada arrival in Boston (1965).", parana:""},
+    {d:6, name:"Indira Ekadashi", type:"ekadashi", desc:"Observed during Pitru Paksha. Grants liberation to ancestors. Krishna Paksha, Ashvina.", parana:"Parana: 06:17 AM to 10:12 AM (Oct 7)\nTithi Begins: 02:07 AM Oct 06 | Ends: 12:34 AM Oct 07"},
     {d:17, name:"Durga Puja", type:"festival", desc:"Sacred festival of Durga Devi.", parana:""},
-    {d:21, name:"Ramachandra Vijayotsava — Shri Madhvacharya Appearance", type:"festival", desc:"Celebration of Lord Rama's victory over Ravana. Appearance of Shri Madhvacharya.", parana:""},
-    {d:22, name:"Pashankusha Ekadashi", type:"ekadashi", desc:"Frees from material bondage. Grants immense merit. Gaura Paksha, Ashvina.", parana:"Parana: 06:27 AM to 10:12 AM (Oct 23)
-Tithi Begins: 02:11 PM Oct 21 | Ends: 02:47 PM Oct 22"},
+    {d:21, name:"Ramachandra Vijayotsava — Shri Madhvacharya Appearance", type:"festival", desc:"Celebration of Lord Rama victory over Ravana. Appearance of Shri Madhvacharya.", parana:""},
+    {d:22, name:"Pashankusha Ekadashi", type:"ekadashi", desc:"Frees from material bondage. Grants immense merit. Gaura Paksha, Ashvina.", parana:"Parana: 06:27 AM to 10:12 AM (Oct 23)\nTithi Begins: 02:11 PM Oct 21 | Ends: 02:47 PM Oct 22"},
     {d:23, name:"Shrila Krishnadasa Kaviraja Goswami — Disappearance", type:"disappearance", desc:"Disappearance of the author of Chaitanya Charitamrita. Also disappearance of Shrila Raghunatha Bhatta Goswami and Shrila Raghunatha Dasa Goswami.", parana:""},
     {d:25, name:"Last Day of 3rd Chaturmasya", type:"festival", desc:"Concluding day of the third Chaturmasya period.", parana:""},
-    {d:26, name:"Shri Krishna Sharadiya Rasayatra — 4th Chaturmasya Begins — Lakshmi Puja", type:"festival", desc:"Krishna's autumn Rasa dance. 4th Chaturmasya begins — Urad Dal fast. Lakshmi Puja. Disappearance of Shri Murari Gupta.", parana:""},
-    {d:30, name:"Shrila Narottama Dasa Thakura — Disappearance", type:"disappearance", desc:"Disappearance of the great Vaishnava poet and acharya.", parana:""},
+    {d:26, name:"Shri Krishna Sharadiya Rasayatra — 4th Chaturmasya Begins — Lakshmi Puja", type:"festival", desc:"Krishna autumn Rasa dance. 4th Chaturmasya begins — Urad Dal fast. Lakshmi Puja. Disappearance of Shri Murari Gupta.", parana:""},
+    {d:30, name:"Shrila Narottama Dasa Thakura — Disappearance", type:"disappearance", desc:"Disappearance of the great Vaishnava poet and acharya.", parana:""}
   ],
   11: [
-    {d:2,  name:"Appearance of Radha Kunda — Bahulashtami", type:"festival", desc:"Sacred appearance of Radha Kunda. Snana Dana — bathing in Radha Kunda is especially auspicious.", parana:""},
-    {d:3,  name:"Shri Virabhadra — Appearance", type:"appearance", desc:"Appearance of Shri Virabhadra.", parana:""},
-    {d:5,  name:"Rama Ekadashi", type:"ekadashi", desc:"Dedicated to Lakshmi-Vishnu. Brings prosperity and removes obstacles. Krishna Paksha, Kartika.", parana:"Parana: 06:37 AM to 10:15 AM (Nov 6)
-Tithi Begins: 11:03 AM Nov 04 | Ends: 10:35 AM Nov 05"},
-    {d:9,  name:"Dipa Dana — Dipavali — Kali Puja", type:"festival", desc:"Festival of lights. Offering lamps to the Lord.", parana:""},
+    {d:2, name:"Appearance of Radha Kunda — Bahulashtami", type:"festival", desc:"Sacred appearance of Radha Kunda. Snana Dana — bathing in Radha Kunda is especially auspicious.", parana:""},
+    {d:3, name:"Shri Virabhadra — Appearance", type:"appearance", desc:"Appearance of Shri Virabhadra.", parana:""},
+    {d:5, name:"Rama Ekadashi", type:"ekadashi", desc:"Dedicated to Lakshmi-Vishnu. Brings prosperity and removes obstacles. Krishna Paksha, Kartika.", parana:"Parana: 06:37 AM to 10:15 AM (Nov 6)\nTithi Begins: 11:03 AM Nov 04 | Ends: 10:35 AM Nov 05"},
+    {d:9, name:"Dipa Dana — Dipavali — Kali Puja", type:"festival", desc:"Festival of lights. Offering lamps to the Lord.", parana:""},
     {d:10, name:"Go Puja — Govardhana Puja — Bali Daityaraja Puja", type:"festival", desc:"Krishna lifted Govardhan Hill to protect Vrindavan. Grand Annakut offering. Appearance of Shri Rasikananda.", parana:""},
     {d:11, name:"Shri Vasudeva Ghosh — Disappearance", type:"disappearance", desc:"Disappearance of Shri Vasudeva Ghosh.", parana:""},
     {d:13, name:"Shrila Prabhupada — Disappearance", type:"disappearance", desc:"Disappearance of A.C. Bhaktivedanta Swami Prabhupada (1977). Devotees fast until noon with memorial programs.", parana:""},
     {d:17, name:"Gopashtami — Gosthashtami", type:"festival", desc:"Krishna became official cowherd. Disappearance of Shri Dhananjaya Pandita, Shri Gadadhara Dasa Goswami, Shri Shrinivasa Acharya.", parana:""},
     {d:18, name:"Jagaddhatri Puja", type:"festival", desc:"Sacred festival of Jagaddhatri Devi.", parana:""},
-    {d:21, name:"Utthana Ekadashi — First Day of Bhishma Panchaka", type:"ekadashi", desc:"Lord Vishnu awakens from Yoga Nidra. End of 4th Chaturmasya. Disappearance of Shrila Gaura Kishora Dasa Babaji. Gaura Paksha, Kartika.", parana:"Parana: 06:49 AM to 10:21 AM (Nov 22)
-Tithi Begins: 07:15 AM Nov 20 | Ends: 06:31 AM Nov 21"},
+    {d:21, name:"Utthana Ekadashi — First Day of Bhishma Panchaka", type:"ekadashi", desc:"Lord Vishnu awakens from Yoga Nidra. End of 4th Chaturmasya. Disappearance of Shrila Gaura Kishora Dasa Babaji. Gaura Paksha, Kartika.", parana:"Parana: 06:49 AM to 10:21 AM (Nov 22)\nTithi Begins: 07:15 AM Nov 20 | Ends: 06:31 AM Nov 21"},
     {d:23, name:"Last Day of 4th Chaturmasya", type:"festival", desc:"Disappearance of Shri Bhugarbha Goswami and Shri Kashishvara Pandita.", parana:""},
     {d:24, name:"Shri Krishna Rasayatra — Tulasi Saligrama Vivaha — Last Day of Bhishma Panchaka", type:"festival", desc:"Appearance of Shri Nimbarkacharya. Tulasi Saligrama marriage ceremony.", parana:""},
-    {d:25, name:"Katyayani Vrata Begins", type:"festival", desc:"Sacred vrata begins for the month.", parana:""},
+    {d:25, name:"Katyayani Vrata Begins", type:"festival", desc:"Sacred vrata begins for the month.", parana:""}
   ],
   12: [
-    {d:4,  name:"Utpanna Ekadashi", type:"ekadashi", desc:"Appearance of Goddess Ekadashi. Most auspicious for beginning Ekadashi fasting. Disappearance of Shri Narahari Sarakara Thakura. Krishna Paksha, Margashirsha.", parana:"Parana: 06:59 AM to 10:28 AM (Dec 5)
-Tithi Begins: 11:03 PM Dec 03 | Ends: 11:44 PM Dec 04"},
-    {d:5,  name:"Shri Kaliya Krishnadasa — Disappearance", type:"disappearance", desc:"Disappearance of Shri Kaliya Krishnadasa.", parana:""},
-    {d:6,  name:"Shri Sharanga Thakura — Disappearance", type:"disappearance", desc:"Disappearance of Shri Sharanga Thakura.", parana:""},
-    {d:15, name:"Odana Shashthi", type:"festival", desc:"Lord Jagannatha changes from summer clothes to winter clothes.", parana:""},
-    {d:20, name:"Mokshada Ekadashi — Advent of Shrimad Bhagavad Gita (Gita Jayanti)", type:"ekadashi", desc:"Grants liberation. Bhagavad Gita was spoken by Krishna to Arjuna on this day. Gaura Paksha, Margashirsha.", parana:"Parana: 07:10 AM to 10:36 AM (Dec 21)
-Tithi Begins: 10:09 PM Dec 19 | Ends: 08:14 PM Dec 20"},
+    {d:4, name:"Utpanna Ekadashi", type:"ekadashi", desc:"Appearance of Goddess Ekadashi. Most auspicious for beginning Ekadashi fasting. Disappearance of Shri Narahari Sarakara Thakura. Krishna Paksha, Margashirsha.", parana:"Parana: 06:59 AM to 10:28 AM (Dec 5)\nTithi Begins: 11:03 PM Dec 03 | Ends: 11:44 PM Dec 04"},
+    {d:5, name:"Shri Kaliya Krishnadasa — Disappearance", type:"disappearance", desc:"Disappearance of Shri Kaliya Krishnadasa.", parana:""},
+    {d:6, name:"Shri Sharanga Thakura — Disappearance", type:"disappearance", desc:"Disappearance of Shri Sharanga Thakura.", parana:""},
+    {d:15, name:"Odana Shashthi", type:"festival", desc:"Lord Jagannatha changes from summer to winter clothes.", parana:""},
+    {d:20, name:"Mokshada Ekadashi — Gita Jayanti", type:"ekadashi", desc:"Grants liberation. Bhagavad Gita was spoken by Krishna to Arjuna on this day. Gaura Paksha, Margashirsha.", parana:"Parana: 07:10 AM to 10:36 AM (Dec 21)\nTithi Begins: 10:09 PM Dec 19 | Ends: 08:14 PM Dec 20"},
     {d:24, name:"Katyayani Vrata Ends", type:"festival", desc:"Sacred vrata concludes.", parana:""},
-    {d:27, name:"Shrila Bhaktisiddhanta Sarasvati Thakura — Disappearance", type:"disappearance", desc:"Disappearance of Shrila Bhaktisiddhanta Sarasvati Thakura (1937), Prabhupada's spiritual master.", parana:""},
+    {d:27, name:"Shrila Bhaktisiddhanta Sarasvati Thakura — Disappearance", type:"disappearance", desc:"Disappearance of Shrila Bhaktisiddhanta Sarasvati Thakura (1937), Shrila Prabhupada spiritual master.", parana:""}
   ]
 };
 
@@ -1972,11 +1947,11 @@ function getTypeColor(type) {
 }
 
 function getTypeEmoji(type) {
-  if (type === "ekadashi") return "🌙";
-  if (type === "festival") return "🎉";
-  if (type === "appearance") return "🌸";
-  if (type === "disappearance") return "🕯️";
-  return "📅";
+  if (type === "ekadashi") return "&#127769;";
+  if (type === "festival") return "&#127881;";
+  if (type === "appearance") return "&#127800;";
+  if (type === "disappearance") return "&#128337;";
+  return "&#128197;";
 }
 
 function getTypeLabel(type) {
@@ -1989,63 +1964,67 @@ function getTypeLabel(type) {
 
 function renderCalendar(month) {
   currentCalMonth = month;
-  var grid = document.getElementById('cal-grid');
+  var grid = document.getElementById("cal-grid");
   if (!grid) return;
   var events = calendarData[month] || [];
   var today = new Date();
   var todayDay = today.getDate();
   var todayMonth = today.getMonth() + 1;
-  var btns = document.querySelectorAll('.cal-month-btn');
-  for (var i = 0; i < btns.length; i++) {
-    var m = parseInt(btns[i].getAttribute('data-month'));
+
+  var btns = document.querySelectorAll(".cal-month-btn");
+  for (var b = 0; b < btns.length; b++) {
+    var m = parseInt(btns[b].getAttribute("data-month"));
     if (m === month) {
-      btns[i].style.background = '#1a3c8f';
-      btns[i].style.color = 'white';
-      btns[i].style.borderColor = '#1a3c8f';
+      btns[b].style.background = "#1a3c8f";
+      btns[b].style.color = "white";
+      btns[b].style.borderColor = "#1a3c8f";
     } else {
-      btns[i].style.background = 'white';
-      btns[i].style.color = '#6b7280';
-      btns[i].style.borderColor = 'rgba(43,74,203,0.12)';
+      btns[b].style.background = "white";
+      btns[b].style.color = "#6b7280";
+      btns[b].style.borderColor = "rgba(43,74,203,0.12)";
     }
   }
+
   if (events.length === 0) {
-    grid.innerHTML = '<div style="text-align:center;padding:40px;color:#6b7280;">No events for ' + monthNames[month] + ' 2026</div>';
+    grid.innerHTML = "<div style='text-align:center;padding:40px;color:#6b7280;'>No events for " + monthNames[month] + " 2026</div>";
     return;
   }
-  var html = '';
+
+  var html = "";
   for (var i = 0; i < events.length; i++) {
     var e = events[i];
     var isPast = (month < todayMonth) || (month === todayMonth && e.d < todayDay);
     var isToday = (month === todayMonth && e.d === todayDay);
     var color = getTypeColor(e.type);
-    var opacity = isPast ? '0.55' : '1';
-    var border = isToday ? '2px solid #d4a017' : '1px solid rgba(43,74,203,0.1)';
-    var bg = isToday ? '#fffbeb' : 'white';
-    html += '<div style="background:' + bg + ';border:' + border + ';border-radius:16px;padding:20px;opacity:' + opacity + ';transition:all 0.2s;" onmouseover="this.style.transform=\'translateY(-2px)\';this.style.boxShadow=\'0 8px 24px rgba(43,74,203,0.08)\'" onmouseout="this.style.transform=\'none\';this.style.boxShadow=\'none\'">';
-    html += '<div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px;">';
-    html += '<div style="display:flex;align-items:center;gap:10px;flex:1;">';
-    html += '<div style="min-width:44px;height:44px;border-radius:12px;background:' + color + ';color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;">' + e.d + '</div>';
-    html += '<h4 style="font-family:Cormorant Garamond,serif;font-size:18px;font-weight:600;color:#1a1a2e;line-height:1.3;margin:0;">' + e.name + '</h4>';
-    html += '</div>';
-    html += '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;">';
-    html += '<span style="font-size:10px;padding:3px 8px;border-radius:20px;background:' + color + '18;color:' + color + ';font-weight:500;white-space:nowrap;">' + getTypeEmoji(e.type) + ' ' + getTypeLabel(e.type) + '</span>';
-    if (isToday) html += '<span style="font-size:10px;padding:2px 7px;border-radius:10px;background:#d4a017;color:white;font-weight:600;">TODAY</span>';
-    if (isPast) html += '<span style="font-size:10px;color:#9ca3af;">✓ Past</span>';
-    html += '</div>';
-    html += '</div>';
-    html += '<p style="font-size:13px;color:#6b7280;line-height:1.55;margin:0 0 0 54px;">' + e.desc + '</p>';
-    if (e.type === 'ekadashi' && e.parana) {
-      var lines = e.parana.split('
-');
-      html += '<div style="margin:10px 0 0 54px;padding:10px 14px;background:#e8eeff;border-radius:10px;border-left:3px solid #1a3c8f;">';
+    var opacity = isPast ? "0.55" : "1";
+    var border = isToday ? "2px solid #d4a017" : "1px solid rgba(43,74,203,0.1)";
+    var bg = isToday ? "#fffbeb" : "white";
+
+    html += "<div style='background:" + bg + ";border:" + border + ";border-radius:16px;padding:20px;opacity:" + opacity + ";margin-bottom:0;transition:all 0.2s;' onmouseover='this.style.transform=\"translateY(-2px)\";this.style.boxShadow=\"0 8px 24px rgba(43,74,203,0.08)\"' onmouseout='this.style.transform=\"none\";this.style.boxShadow=\"none\"'>";
+    html += "<div style='display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px;gap:8px;'>";
+    html += "<div style='display:flex;align-items:center;gap:10px;flex:1;'>";
+    html += "<div style='min-width:44px;height:44px;border-radius:12px;background:" + color + ";color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;'>" + e.d + "</div>";
+    html += "<h4 style='font-family:Cormorant Garamond,serif;font-size:18px;font-weight:600;color:#1a1a2e;line-height:1.3;margin:0;'>" + e.name + "</h4>";
+    html += "</div>";
+    html += "<span style='font-size:10px;padding:3px 8px;border-radius:20px;background:" + color + "18;color:" + color + ";font-weight:500;white-space:nowrap;flex-shrink:0;'>" + getTypeLabel(e.type) + "</span>";
+    html += "</div>";
+    html += "<p style='font-size:13px;color:#6b7280;line-height:1.55;margin:0 0 0 54px;'>" + e.desc + "</p>";
+
+    if (e.type === "ekadashi" && e.parana) {
+      var lines = e.parana.split("\n");
+      html += "<div style='margin:10px 0 0 54px;padding:10px 14px;background:#e8eeff;border-radius:10px;border-left:3px solid #1a3c8f;'>";
       for (var j = 0; j < lines.length; j++) {
         if (lines[j].trim()) {
-          html += '<p style="font-size:12px;color:#1a3c8f;margin:2px 0;font-weight:500;">' + lines[j] + '</p>';
+          html += "<p style='font-size:12px;color:#1a3c8f;margin:2px 0;font-weight:500;'>" + lines[j] + "</p>";
         }
       }
-      html += '</div>';
+      html += "</div>";
     }
-    html += '</div>';
+
+    if (isToday) {
+      html += "<div style='margin-top:8px;margin-left:54px;font-size:10px;color:#d4a017;font-weight:600;'>TODAY</div>";
+    }
+    html += "</div>";
   }
   grid.innerHTML = html;
 }
@@ -2054,8 +2033,8 @@ function initCalendar() {
   renderCalendar(currentCalMonth);
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initCalendar);
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initCalendar);
 } else {
   initCalendar();
 }
@@ -2074,43 +2053,64 @@ var dailyVerses = [
   {text:"One who is not disturbed in spite of the threefold miseries, who is not elated when there is happiness, is certainly eligible for liberation.", ref:"Bhagavad Gita 2.15"},
   {text:"Whatever action a great man performs, common men follow. Whatever standards he sets by exemplary acts, all the world pursues.", ref:"Bhagavad Gita 3.21"},
   {text:"There is no truth superior to Me. Everything rests upon Me, as pearls are strung on a thread.", ref:"Bhagavad Gita 7.7"},
-  {text:"One who is equal to friends and enemies, who is equipoised in honor and dishonor, who is always free from contamination — such a devotee is very dear to Me.", ref:"Bhagavad Gita 12.18-19"},
+  {text:"One who is equal to friends and enemies, who is equipoised in honor and dishonor, who is always free from contamination, is very dear to Me.", ref:"Bhagavad Gita 12.18-19"},
   {text:"For him who has conquered the mind, the mind is the best of friends; but for one who has failed to do so, his very mind will be the greatest enemy.", ref:"Bhagavad Gita 6.6"},
-  {text:"In this world, there is nothing so sublime and pure as transcendental knowledge. One who has become accomplished in the practice of devotion enjoys this knowledge within himself in due course of time.", ref:"Bhagavad Gita 4.38"},
+  {text:"In this world, there is nothing so sublime and pure as transcendental knowledge. Such knowledge is the mature fruit of all mysticism.", ref:"Bhagavad Gita 4.38"},
   {text:"A person who is not disturbed by the incessant flow of desires can alone achieve peace, and not the man who strives to satisfy such desires.", ref:"Bhagavad Gita 2.70"},
   {text:"The soul is never born nor dies at any time. It has not come into being, does not come into being, and will not come into being. It is unborn, eternal, ever-existing and primeval.", ref:"Bhagavad Gita 2.20"},
-  {text:"I am the Super Soul seated in the hearts of all living entities. I am the beginning, the middle and the end of all beings.", ref:"Bhagavad Gita 10.20"},
-  {text:"Whatever you do, whatever you eat, whatever you offer or give away, and whatever austerities you perform — do that as an offering unto Me.", ref:"Bhagavad Gita 9.27"},
+  {text:"I am the Supersoul seated in the hearts of all living entities. I am the beginning, the middle and the end of all beings.", ref:"Bhagavad Gita 10.20"},
+  {text:"Whatever you do, whatever you eat, whatever you offer or give away, and whatever austerities you perform, do that as an offering unto Me.", ref:"Bhagavad Gita 9.27"},
   {text:"From the highest planet in the material world down to the lowest, all are places of misery wherein repeated birth and death take place. But one who attains to My abode never takes birth again.", ref:"Bhagavad Gita 8.16"},
   {text:"Out of many thousands among men, one may endeavor for perfection, and of those who have achieved perfection, hardly one knows Me in truth.", ref:"Bhagavad Gita 7.3"},
   {text:"Always think of Me, become My devotee, worship Me and offer your homage unto Me. Thus you will come to Me without fail.", ref:"Bhagavad Gita 18.65"},
-  {text:"He who has no attachments can really love others, for his love is pure and divine.", ref:"Bhagavad Gita 2.64"},
-  {text:"Set thy heart upon thy work, but never on its reward.", ref:"Bhagavad Gita 2.47"},
+  {text:"Set thy heart upon thy work, but never on its reward. Work not for a reward; but never cease to do thy work.", ref:"Bhagavad Gita 2.47"},
   {text:"I envy no one, nor am I partial to anyone. I am equal to all. But whoever renders service unto Me in devotion is a friend, is in Me, and I am also a friend to him.", ref:"Bhagavad Gita 9.29"},
   {text:"When meditation is mastered, the mind is unwavering like the flame of a lamp in a windless place.", ref:"Bhagavad Gita 6.19"},
-  {text:"The wise see that there is action in the midst of inaction and inaction in the midst of action. Their consciousness is unified, and every act is done with complete awareness.", ref:"Bhagavad Gita 4.18"},
   {text:"One who performs his duty without attachment, surrendering the results unto the Supreme Lord, is unaffected by sinful action, as the lotus leaf is untouched by water.", ref:"Bhagavad Gita 5.10"},
   {text:"Whenever and wherever there is a decline in righteousness and a predominant rise of unrighteousness, at that time I manifest Myself.", ref:"Bhagavad Gita 4.7"},
   {text:"Let a man lift himself by his own self alone; let him not lower himself, for this self alone is the friend of oneself and this self alone is the enemy of oneself.", ref:"Bhagavad Gita 6.5"},
-  {text:"Those who always worship Me with exclusive devotion, meditating on My transcendental form — to them I carry what they lack, and I preserve what they have.", ref:"Bhagavad Gita 9.22"},
   {text:"Even if you are considered to be the most sinful of all sinners, when you are situated in the boat of transcendental knowledge you will be able to cross over the ocean of miseries.", ref:"Bhagavad Gita 4.36"},
-  {text:"The living entity in the material world carries his different conceptions of life from one body to another, as the air carries aromas. Thus he takes one kind of body and again quits it to take another.", ref:"Bhagavad Gita 15.8"},
+  {text:"The living entity carries his different conceptions of life from one body to another, as the air carries aromas.", ref:"Bhagavad Gita 15.8"},
   {text:"That which is night for all beings is the time of awakening for the self-controlled; and the time of awakening for all beings is night for the introspective sage.", ref:"Bhagavad Gita 2.69"},
+  {text:"Those who always worship Me with exclusive devotion, meditating on My transcendental form, to them I carry what they lack, and I preserve what they have.", ref:"Bhagavad Gita 9.22"},
+  {text:"The wise see that there is action in the midst of inaction and inaction in the midst of action.", ref:"Bhagavad Gita 4.18"},
+  {text:"Among all that is created, I am the beginning, the middle and the end. Among the sciences I am the science of the Self, and among logicians I am the conclusive truth.", ref:"Bhagavad Gita 10.32"},
 ];
 
 function setDailyVerse() {
   var today = new Date();
   var start = new Date(today.getFullYear(), 0, 0);
-  var diff = today - start;
-  var dayOfYear = Math.floor(diff / 86400000);
+  var dayOfYear = Math.floor((today - start) / 86400000);
   var idx = dayOfYear % dailyVerses.length;
   var v = dailyVerses[idx];
-  var verseEl = document.getElementById('daily-verse-text');
-  var refEl = document.getElementById('daily-verse-ref');
-  if (verseEl) verseEl.textContent = '"' + v.text + '"';
-  if (refEl) refEl.textContent = '— ' + v.ref;
+
+  // Update verse text
+  var verseEl = document.getElementById("daily-verse-text");
+  if (verseEl) {
+    verseEl.innerHTML = "&ldquo;" + v.text + "&rdquo;";
+  }
+
+  // Update verse reference
+  var refEl = document.getElementById("daily-verse-ref");
+  if (refEl) {
+    refEl.textContent = v.ref + " · Srila Prabhupada";
+  }
+
+  // Update date to TODAY
+  var dateEl = document.getElementById("daily-verse-date");
+  if (dateEl) {
+    var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    dateEl.textContent = days[today.getDay()] + ", " + months[today.getMonth()] + " " + today.getDate() + ", " + today.getFullYear();
+  }
 }
-setDailyVerse();
+
+// Run on page load
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setDailyVerse);
+} else {
+  setDailyVerse();
+}
 </script>
 </body>
 </html>
