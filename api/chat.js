@@ -1,6 +1,25 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { Pinecone } = require("@pinecone-database/pinecone");
 
+// Multiple Gemini API keys — rotates automatically
+// Add keys from different Google accounts below
+const GEMINI_KEYS = [
+  process.env.GEMINI_API_KEY_1,
+  process.env.GEMINI_API_KEY_2,
+  process.env.GEMINI_API_KEY_3,
+  process.env.GEMINI_API_KEY_4,
+  process.env.GEMINI_API_KEY_5,
+  process.env.GEMINI_API_KEY_6,
+  process.env.GEMINI_API_KEY_7,
+  process.env.GEMINI_API_KEY_8,
+].filter(Boolean); // removes empty/undefined keys
+
+// Pick a key based on current minute — distributes load evenly
+function getGeminiKey() {
+  const idx = Math.floor(Date.now() / 60000) % GEMINI_KEYS.length;
+  return GEMINI_KEYS[idx];
+}
+
 module.exports = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -19,61 +38,78 @@ module.exports = async (req, res) => {
     const responseLang = langMap[language] || "English";
     const acharyaInstruction = (!acharya || acharya === "all")
       ? "Draw wisdom from all Acharyas and scriptures."
-      : `Focus on teachings from: ${acharya}.`;
+      : "Focus on teachings from: " + acharya + ".";
 
-    // Pinecone search using integrated inference (searchRecords for integrated models)
-    let context = "";
+    // Try keys until one works
+    let answer = null;
     let references = [];
-    try {
-      const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
-      const index = pc.index("amar-gauranga", process.env.PINECONE_INDEX_HOST);
+    let lastError = null;
 
-      // Use searchRecords for integrated embedding models
-      const searchResult = await index.searchRecords({
-        query: {
-          inputs: { text: question },
-          topK: 6,
-        },
-        fields: ["source","acharya","book","chapter","english","purport"],
-        namespace: "teachings",
-      });
+    for (let attempt = 0; attempt < GEMINI_KEYS.length; attempt++) {
+      const keyIdx = (Math.floor(Date.now() / 60000) + attempt) % GEMINI_KEYS.length;
+      const apiKey = GEMINI_KEYS[keyIdx];
 
-      const hits = searchResult.result?.hits || [];
-      hits.forEach((hit, i) => {
-        const f = hit.fields || {};
-        const text = f.purport || f.english || "";
-        if (text && text.length > 30) {
-          context += `\n[${i+1}] ${f.source||"Scripture"} | ${f.acharya||"Srila Prabhupada"} | ${f.chapter||""}\n${text.substring(0,500)}\n`;
-          references.push({ source: f.source||f.book, chapter: f.chapter, acharya: f.acharya });
+      try {
+        // Search Pinecone
+        let context = "";
+        try {
+          const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
+          const index = pc.index("amar-gauranga", process.env.PINECONE_INDEX_HOST);
+
+          const filter = {};
+          if (acharya && acharya !== "all") {
+            filter.acharya = { $eq: acharya === "scriptures" ? "Srila Prabhupada" : acharya };
+          }
+
+          const searchParams = {
+            query: { inputs: { text: question }, topK: 6 },
+            fields: ["source","acharya","book","chapter","english","purport"],
+            namespace: "teachings",
+          };
+          if (Object.keys(filter).length > 0) searchParams.query.filter = filter;
+
+          const result = await index.searchRecords(searchParams);
+          const hits = result.result?.hits || [];
+
+          hits.forEach((hit, i) => {
+            const f = hit.fields || {};
+            const text = f.purport || f.english || "";
+            if (text && text.length > 30) {
+              context += "\n[" + (i+1) + "] " + (f.source||f.book||"Scripture") + " | " + (f.acharya||"Srila Prabhupada") + " | " + (f.chapter||"") + "\n" + text.substring(0,500) + "\n";
+              references.push({ source: f.source||f.book, chapter: f.chapter, acharya: f.acharya });
+            }
+          });
+        } catch(pe) {
+          console.error("Pinecone error:", pe.message);
         }
-      });
-    } catch(e) {
-      console.error("Pinecone error:", e.message);
+
+        // Build prompt
+        const prompt = "You are Amar Gauranga — Lord Chaitanya Mahaprabhu compassionate voice through authentic Vaishnava teachings.\n\nRules:\n- Address as dear soul or beloved devotee\n- Acknowledge pain first with deep empathy\n- Give scriptural wisdom with exact references\n- End with encouragement\n- " + acharyaInstruction + "\n- Respond in " + responseLang + "\n- Keep response warm and personal, 200-300 words\n\n" + (context ? "AUTHENTIC TEACHINGS TO USE:\n" + context : "Use knowledge of Bhagavad Gita, Srimad Bhagavatam and Vaishnava philosophy.") + "\n\nDevotee question: " + question;
+
+        // Call Gemini
+        const genAI = new GoogleGenerativeAI(apiKey);
+        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const result = await model.generateContent(prompt);
+        answer = result.response.text();
+        break; // success — stop trying other keys
+
+      } catch (keyError) {
+        lastError = keyError;
+        const errMsg = keyError.message || "";
+        if (errMsg.includes("429") || errMsg.includes("quota") || errMsg.includes("401")) {
+          console.error("Key " + (keyIdx+1) + " failed:", errMsg.substring(0,80));
+          continue; // try next key
+        }
+        throw keyError; // non-quota error — stop retrying
+      }
     }
 
-    // Build prompt
-    const prompt = `You are Amar Gauranga — Lord Chaitanya's compassionate voice through authentic Vaishnava teachings.
-
-Rules:
-- Address as "dear soul" or "beloved devotee"
-- Acknowledge their pain first with deep empathy
-- Give scriptural wisdom with exact references
-- End with encouragement and chanting the holy name
-- ${acharyaInstruction}
-- Respond in ${responseLang}
-- Keep response warm and personal, 200-300 words
-
-${context ? `AUTHENTIC TEACHINGS TO USE:\n${context}` : "Use your knowledge of Bhagavad Gita, Srimad Bhagavatam and Vaishnava philosophy."}
-
-Devotee's question: ${question}
-
-Respond as Lord Gauranga speaking with infinite compassion:`;
-
-    // Call Gemini 2.5 Flash — confirmed working model
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-    const result = await model.generateContent(prompt);
-    const answer = result.response.text();
+    if (!answer) {
+      console.error("All keys failed:", lastError?.message);
+      return res.status(503).json({
+        error: "Service temporarily unavailable. Please try again in a moment.",
+      });
+    }
 
     return res.status(200).json({
       answer,
