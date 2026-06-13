@@ -1,8 +1,6 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { Pinecone } = require("@pinecone-database/pinecone");
 
-// Multiple Gemini API keys — rotates automatically
-// Add keys from different Google accounts below
 const GEMINI_KEYS = [
   process.env.GEMINI_API_KEY_1,
   process.env.GEMINI_API_KEY_2,
@@ -12,19 +10,12 @@ const GEMINI_KEYS = [
   process.env.GEMINI_API_KEY_6,
   process.env.GEMINI_API_KEY_7,
   process.env.GEMINI_API_KEY_8,
-].filter(Boolean); // removes empty/undefined keys
-
-// Pick a key based on current minute — distributes load evenly
-function getGeminiKey() {
-  const idx = Math.floor(Date.now() / 60000) % GEMINI_KEYS.length;
-  return GEMINI_KEYS[idx];
-}
+].filter(Boolean);
 
 module.exports = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
   if (req.method === "OPTIONS") return res.status(200).end();
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
 
@@ -36,85 +27,121 @@ module.exports = async (req, res) => {
 
     const langMap = { en:"English", hi:"Hindi", bn:"Bengali", ru:"Russian", es:"Spanish" };
     const responseLang = langMap[language] || "English";
-    const acharyaInstruction = (!acharya || acharya === "all")
-      ? "Draw wisdom from all Acharyas and scriptures."
-      : "Focus on teachings from: " + acharya + ".";
 
-    // Try keys until one works
-    let answer = null;
-    let references = [];
-    let lastError = null;
+    // ── STEP 1: Search Pinecone for relevant teachings ──────
+    let hits = [];
+    let searchError = null;
+    try {
+      const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
+      const index = pc.index("amar-gauranga", process.env.PINECONE_INDEX_HOST);
 
-    for (let attempt = 0; attempt < GEMINI_KEYS.length; attempt++) {
-      const keyIdx = (Math.floor(Date.now() / 60000) + attempt) % GEMINI_KEYS.length;
-      const apiKey = GEMINI_KEYS[keyIdx];
+      const searchParams = {
+        query: { inputs: { text: question }, topK: 8 },
+        fields: ["source","acharya","book","chapter","english","purport","sanskrit"],
+        namespace: "teachings",
+      };
 
+      // Filter by acharya if selected
+      if (acharya && acharya !== "all" && acharya !== "scriptures") {
+        searchParams.query.filter = { acharya: { $eq: acharya } };
+      }
+
+      const result = await index.searchRecords(searchParams);
+      hits = result.result?.hits || [];
+    } catch (pe) {
+      searchError = pe.message;
+      console.error("Pinecone error:", pe.message);
+    }
+
+    // ── STEP 2: If no matches found, say so honestly ────────
+    if (hits.length === 0) {
+      return res.status(200).json({
+        answer: "Dear soul, I searched through all the teachings in our sacred database but could not find a direct reference for your specific question. Please try rephrasing your question, or ask about a different aspect of your situation.",
+        references: [],
+        matches_found: 0,
+        strict_mode: true,
+      });
+    }
+
+    // ── STEP 3: Build context from Pinecone hits ────────────
+    var context = "";
+    var references = [];
+
+    for (var i = 0; i < hits.length; i++) {
+      var hit = hits[i];
+      var f = hit.fields || {};
+      var text = f.purport || f.english || "";
+      if (!text || text.length < 20) continue;
+
+      var source = f.source || f.book || "Scripture";
+      var chapter = f.chapter || "";
+      var acharyaName = f.acharya || "Srila Prabhupada";
+
+      context += "\n[TEACHING " + (i+1) + "]\n";
+      context += "Source: " + source + "\n";
+      context += "Reference: " + chapter + "\n";
+      context += "Acharya: " + acharyaName + "\n";
+      context += "Text: " + text.substring(0, 600) + "\n";
+
+      references.push({
+        source: source,
+        chapter: chapter,
+        acharya: acharyaName,
+        score: hit.score || 0,
+      });
+    }
+
+    // ── STEP 4: Build strict prompt ─────────────────────────
+    const prompt = "You are Amar Gauranga — a compassionate Vaishnava guide.\n\n" +
+      "STRICT RULES:\n" +
+      "1. Answer ONLY using the teachings provided below. Do NOT add knowledge from outside these teachings.\n" +
+      "2. Every key point you make MUST cite the source in this format: (Source Name, Reference)\n" +
+      "3. If the provided teachings do not contain enough information to answer, say so honestly.\n" +
+      "4. Begin with warm compassion addressing the devotee's situation.\n" +
+      "5. Quote or paraphrase directly from the teachings below, always with citation.\n" +
+      "6. End with an encouraging closing line.\n" +
+      "7. Respond in " + responseLang + ".\n" +
+      "8. Keep response between 150-280 words.\n\n" +
+      "TEACHINGS FROM DATABASE:\n" + context + "\n\n" +
+      "DEVOTEE QUESTION: " + question + "\n\n" +
+      "Remember: Cite every point with its source reference in parentheses.";
+
+    // ── STEP 5: Try Gemini keys with rotation ───────────────
+    var answer = null;
+    var lastError = null;
+
+    for (var attempt = 0; attempt < GEMINI_KEYS.length; attempt++) {
+      var keyIdx = (Math.floor(Date.now() / 60000) + attempt) % GEMINI_KEYS.length;
+      var apiKey = GEMINI_KEYS[keyIdx];
       try {
-        // Search Pinecone
-        let context = "";
-        try {
-          const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
-          const index = pc.index("amar-gauranga", process.env.PINECONE_INDEX_HOST);
-
-          const filter = {};
-          if (acharya && acharya !== "all") {
-            filter.acharya = { $eq: acharya === "scriptures" ? "Srila Prabhupada" : acharya };
-          }
-
-          const searchParams = {
-            query: { inputs: { text: question }, topK: 6 },
-            fields: ["source","acharya","book","chapter","english","purport"],
-            namespace: "teachings",
-          };
-          if (Object.keys(filter).length > 0) searchParams.query.filter = filter;
-
-          const result = await index.searchRecords(searchParams);
-          const hits = result.result?.hits || [];
-
-          hits.forEach((hit, i) => {
-            const f = hit.fields || {};
-            const text = f.purport || f.english || "";
-            if (text && text.length > 30) {
-              context += "\n[" + (i+1) + "] " + (f.source||f.book||"Scripture") + " | " + (f.acharya||"Srila Prabhupada") + " | " + (f.chapter||"") + "\n" + text.substring(0,500) + "\n";
-              references.push({ source: f.source||f.book, chapter: f.chapter, acharya: f.acharya });
-            }
-          });
-        } catch(pe) {
-          console.error("Pinecone error:", pe.message);
-        }
-
-        // Build prompt
-        const prompt = "You are Amar Gauranga — Lord Chaitanya Mahaprabhu compassionate voice through authentic Vaishnava teachings.\n\nRules:\n- Address as dear soul or beloved devotee\n- Acknowledge pain first with deep empathy\n- Give scriptural wisdom with exact references\n- End with encouragement\n- " + acharyaInstruction + "\n- Respond in " + responseLang + "\n- Keep response warm and personal, 200-300 words\n\n" + (context ? "AUTHENTIC TEACHINGS TO USE:\n" + context : "Use knowledge of Bhagavad Gita, Srimad Bhagavatam and Vaishnava philosophy.") + "\n\nDevotee question: " + question;
-
-        // Call Gemini
-        const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-        const result = await model.generateContent(prompt);
+        var genAI = new GoogleGenerativeAI(apiKey);
+        var model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        var result = await model.generateContent(prompt);
         answer = result.response.text();
-        break; // success — stop trying other keys
-
+        break;
       } catch (keyError) {
         lastError = keyError;
-        const errMsg = keyError.message || "";
+        var errMsg = keyError.message || "";
         if (errMsg.includes("429") || errMsg.includes("quota") || errMsg.includes("401")) {
-          console.error("Key " + (keyIdx+1) + " failed:", errMsg.substring(0,80));
-          continue; // try next key
+          console.error("Key " + (keyIdx+1) + " failed:", errMsg.substring(0,60));
+          continue;
         }
-        throw keyError; // non-quota error — stop retrying
+        throw keyError;
       }
     }
 
     if (!answer) {
-      console.error("All keys failed:", lastError?.message);
       return res.status(503).json({
-        error: "Service temporarily unavailable. Please try again in a moment.",
+        error: "All API keys are temporarily exhausted. Please try again after 12:30 PM IST.",
       });
     }
 
+    // ── STEP 6: Return answer with full references ──────────
     return res.status(200).json({
-      answer,
-      references: references.slice(0, 3),
-      matches_found: references.length,
+      answer: answer,
+      references: references.slice(0, 5),
+      matches_found: hits.length,
+      strict_mode: true,
     });
 
   } catch (error) {
