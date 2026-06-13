@@ -12,6 +12,27 @@ const GEMINI_KEYS = [
   process.env.GEMINI_API_KEY_8,
 ].filter(Boolean);
 
+async function callGemini(prompt) {
+  var lastError = null;
+  for (var attempt = 0; attempt < GEMINI_KEYS.length; attempt++) {
+    var keyIdx = (Math.floor(Date.now() / 60000) + attempt) % GEMINI_KEYS.length;
+    try {
+      var genAI = new GoogleGenerativeAI(GEMINI_KEYS[keyIdx]);
+      var model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+      var result = await model.generateContent(prompt);
+      return result.response.text();
+    } catch (e) {
+      lastError = e;
+      var msg = e.message || "";
+      if (msg.includes("429") || msg.includes("quota") || msg.includes("401")) {
+        continue;
+      }
+      throw e;
+    }
+  }
+  throw lastError || new Error("All keys exhausted");
+}
+
 module.exports = async (req, res) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
@@ -28,127 +49,103 @@ module.exports = async (req, res) => {
     const langMap = { en:"English", hi:"Hindi", bn:"Bengali", ru:"Russian", es:"Spanish" };
     const responseLang = langMap[language] || "English";
 
-    // ── STEP 1: Search Pinecone for relevant teachings ──────
-    let hits = [];
-    let searchError = null;
+    // ── STEP 1: Search Pinecone with topK:10 ───────────────
+    var hits = [];
     try {
-      const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
-      const index = pc.index("amar-gauranga", process.env.PINECONE_INDEX_HOST);
+      var pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
+      var index = pc.index("amar-gauranga", process.env.PINECONE_INDEX_HOST);
 
-      const searchParams = {
-        query: { inputs: { text: question }, topK: 8 },
-        fields: ["source","acharya","book","chapter","english","purport","sanskrit"],
+      var searchParams = {
+        query: { inputs: { text: question }, topK: 10 },
+        fields: ["source","acharya","book","chapter","english","purport"],
         namespace: "teachings",
       };
 
-      // Filter by acharya if selected
       if (acharya && acharya !== "all" && acharya !== "scriptures") {
         searchParams.query.filter = { acharya: { $eq: acharya } };
       }
 
-      const result = await index.searchRecords(searchParams);
+      var result = await index.searchRecords(searchParams);
       hits = result.result?.hits || [];
     } catch (pe) {
-      searchError = pe.message;
       console.error("Pinecone error:", pe.message);
     }
 
-    // ── STEP 2: If no matches found, say so honestly ────────
-    if (hits.length === 0) {
-      return res.status(200).json({
-        answer: "Dear soul, I searched through all the teachings in our sacred database but could not find a direct reference for your specific question. Please try rephrasing your question, or ask about a different aspect of your situation.",
-        references: [],
-        matches_found: 0,
-        strict_mode: true,
-      });
-    }
+    // ── STEP 2: Score how good the matches are ─────────────
+    // Only use database if we have strong matches (score > 0.65)
+    var strongHits = hits.filter(function(h) { return (h.score || 0) >= 0.65; });
+    var weakHits   = hits.filter(function(h) { return (h.score || 0) >= 0.50 && (h.score || 0) < 0.65; });
 
-    // ── STEP 3: Build context from Pinecone hits ────────────
-    var context = "";
+    var fromDatabase = strongHits.length >= 2;  // Need at least 2 strong hits
+    var useHits = fromDatabase ? strongHits : (weakHits.length >= 3 ? weakHits : []);
+    var isFromDB = useHits.length > 0;
+
     var references = [];
-
-    for (var i = 0; i < hits.length; i++) {
-      var hit = hits[i];
-      var f = hit.fields || {};
-      var text = f.purport || f.english || "";
-      if (!text || text.length < 20) continue;
-
-      var source = f.source || f.book || "Scripture";
-      var chapter = f.chapter || "";
-      var acharyaName = f.acharya || "Srila Prabhupada";
-
-      context += "\n[TEACHING " + (i+1) + "]\n";
-      context += "Source: " + source + "\n";
-      context += "Reference: " + chapter + "\n";
-      context += "Acharya: " + acharyaName + "\n";
-      context += "Text: " + text.substring(0, 600) + "\n";
-
-      references.push({
-        source: source,
-        chapter: chapter,
-        acharya: acharyaName,
-        score: hit.score || 0,
-      });
-    }
-
-    // ── STEP 4: Build strict prompt ─────────────────────────
-    const prompt = "You are Amar Gauranga — a compassionate Vaishnava guide.\n\n" +
-      "STRICT RULES:\n" +
-      "1. Answer ONLY using the teachings provided below. Do NOT add knowledge from outside these teachings.\n" +
-      "2. Every key point you make MUST cite the source in this format: (Source Name, Reference)\n" +
-      "3. If the provided teachings do not contain enough information to answer, say so honestly.\n" +
-      "4. Begin with warm compassion addressing the devotee's situation.\n" +
-      "5. Quote or paraphrase directly from the teachings below, always with citation.\n" +
-      "6. End with an encouraging closing line.\n" +
-      "7. Respond in " + responseLang + ".\n" +
-      "8. Keep response between 150-280 words.\n\n" +
-      "TEACHINGS FROM DATABASE:\n" + context + "\n\n" +
-      "DEVOTEE QUESTION: " + question + "\n\n" +
-      "Remember: Cite every point with its source reference in parentheses.";
-
-    // ── STEP 5: Try Gemini keys with rotation ───────────────
     var answer = null;
-    var lastError = null;
 
-    for (var attempt = 0; attempt < GEMINI_KEYS.length; attempt++) {
-      var keyIdx = (Math.floor(Date.now() / 60000) + attempt) % GEMINI_KEYS.length;
-      var apiKey = GEMINI_KEYS[keyIdx];
-      try {
-        var genAI = new GoogleGenerativeAI(apiKey);
-        var model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-        var result = await model.generateContent(prompt);
-        answer = result.response.text();
-        break;
-      } catch (keyError) {
-        lastError = keyError;
-        var errMsg = keyError.message || "";
-        if (errMsg.includes("429") || errMsg.includes("quota") || errMsg.includes("401")) {
-          console.error("Key " + (keyIdx+1) + " failed:", errMsg.substring(0,60));
-          continue;
-        }
-        throw keyError;
+    if (isFromDB) {
+      // ── DATABASE PATH: Build context from Pinecone hits ──
+      var context = "";
+      for (var i = 0; i < useHits.length; i++) {
+        var f = useHits[i].fields || {};
+        var text = f.purport || f.english || "";
+        if (!text || text.length < 20) continue;
+        var src = f.source || f.book || "Scripture";
+        var ch  = f.chapter || "";
+        var ach = f.acharya || "Srila Prabhupada";
+        context += "\n[TEACHING " + (i+1) + "]\n";
+        context += "Source: " + src + "\n";
+        context += "Reference: " + ch + "\n";
+        context += "Acharya: " + ach + "\n";
+        context += "Text: " + text.substring(0, 600) + "\n";
+        references.push({ source: src, chapter: ch, acharya: ach });
       }
+
+      var dbPrompt =
+        "You are Amar Gauranga — a compassionate Vaishnava guide.\n\n" +
+        "STRICT RULES:\n" +
+        "1. Answer ONLY using the teachings provided below. Do NOT use outside knowledge.\n" +
+        "2. Every key point MUST include a citation in this exact format: (Source, Reference)\n" +
+        "3. Begin by acknowledging the devotee situation with warmth.\n" +
+        "4. Weave the teachings naturally into your answer with citations.\n" +
+        "5. Close with encouragement.\n" +
+        "6. Respond in " + responseLang + ".\n" +
+        "7. Keep response 180-280 words.\n\n" +
+        "TEACHINGS:\n" + context + "\n\n" +
+        "QUESTION: " + question;
+
+      answer = await callGemini(dbPrompt);
+
+    } else {
+      // ── FALLBACK PATH: General Vaishnava knowledge ────────
+      var fallbackPrompt =
+        "You are Amar Gauranga — a compassionate Vaishnava spiritual guide.\n\n" +
+        "IMPORTANT: Our specific scripture database did not find a strong match for this question.\n" +
+        "You must answer from your broad knowledge of Gaudiya Vaishnava philosophy.\n\n" +
+        "RULES:\n" +
+        "1. Start with: 'While our specific teachings database did not contain a direct match, " +
+           "the broader Vaishnava tradition offers this guidance:'\n" +
+        "2. Cite from Bhagavad Gita, Srimad Bhagavatam, or Chaitanya Charitamrita with exact verse references.\n" +
+        "3. Mention the Acharya (Srila Prabhupada, Srila Rupa Goswami, etc.) when quoting.\n" +
+        "4. Be compassionate and address the devotee situation directly.\n" +
+        "5. Respond in " + responseLang + ".\n" +
+        "6. Keep response 150-250 words.\n\n" +
+        "QUESTION: " + question;
+
+      answer = await callGemini(fallbackPrompt);
     }
 
-    if (!answer) {
-      return res.status(503).json({
-        error: "All API keys are temporarily exhausted. Please try again after 12:30 PM IST.",
-      });
-    }
-
-    // ── STEP 6: Return answer with full references ──────────
     return res.status(200).json({
       answer: answer,
       references: references.slice(0, 5),
-      matches_found: hits.length,
-      strict_mode: true,
+      matches_found: useHits.length,
+      from_database: isFromDB,
     });
 
   } catch (error) {
     console.error("Error:", error.message);
     return res.status(500).json({
       error: "Something went wrong. Please try again.",
-      details: error.message,
     });
   }
 };
